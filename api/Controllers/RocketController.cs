@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.Dtos.Rocket;
+using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
@@ -16,25 +18,26 @@ namespace api.Controllers
     public class RocketController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public RocketController(ApplicationDBContext context)
+        private readonly IRocketRepository _rocketRepo;
+        public RocketController(ApplicationDBContext context, IRocketRepository rocketRepo)
         {
+            _rocketRepo = rocketRepo;
             _context = context;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var rocket = _context.Rocket.ToList()
-            .Select(s => s.ToRocketDto());
+            var rocket = await _rocketRepo.GetAllAsync();
+            var rocketDto = rocket.Select(s => s.ToRocketDto());
 
             return Ok(rocket);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var rocket = _context.Rocket.ToList()
-            .Select(s => s.ToRocketDto());;
+            var rocket = await _rocketRepo.GetByIdAsync(id);
 
             if (rocket == null)
             {
@@ -42,6 +45,40 @@ namespace api.Controllers
             }
 
             return Ok(rocket);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateRocketRequestDto rocketDto)
+        {
+            var rocketModel = rocketDto.ToRocketFromCreateDTO();
+            await _rocketRepo.CreateAsync(rocketModel);
+            return CreatedAtAction(nameof(GetById), new { id = rocketModel.ID }, rocketModel.ToRocketDto());
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateRocketRequestDto updateDto)
+        {
+            var rocketModel = await _rocketRepo.UpdateAsync(id, updateDto);
+            if (rocketModel == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(rocketModel.ToRocketDto());
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var rocketModel = await _rocketRepo.DeleteAsync(id);
+            if (rocketModel == null)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }

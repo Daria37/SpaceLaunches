@@ -13,7 +13,20 @@ namespace api.Mappers
         {
             return new RocketDto
             {
-                ID = rocketModel.ID
+                ID = rocketModel.ID,
+                Name = rocketModel.Name,
+                Config = rocketModel.Config,
+                AgencyID = rocketModel.AgencyID
+            };
+        }
+        public static Rocket ToRocketFromCreateDTO(this CreateRocketRequestDto rocketDto)
+        {
+            return new Rocket
+            {
+                ID = rocketDto.ID,
+                Name = rocketDto.Name,
+                Config = rocketDto.Config,
+                AgencyID = rocketDto.AgencyID
             };
         }
     }

@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace api.Dtos.Launches
+{
+    public class LaunchesDto
+    {
+        public int ID { get; set; }
+        public required string Name { get; set; }
+        public DateTime CreatedOnUTC { get; set; }
+        public int? RocketID { get; set; }
+        public int? AgencyID { get; set; }
+        public int? CountryCode { get; set; }
+    }
+}

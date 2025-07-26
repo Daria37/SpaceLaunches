@@ -1,4 +1,6 @@
 using api.Data;
+using api.Interfaces;
+using api.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,9 @@ builder.Services.AddDbContext<ApplicationDBContext>(
 
 // builder.Services.AddStackExchangeRedisCache(options =>
 //     options.Configuration = builder.Configuration.GetConnectionString("Cache"));
+
+builder.Services.AddScoped<IRocketRepository, RocketRepository>();
+builder.Services.AddScoped<ILaunchesRepository, LaunchesRepository>();
 
 var app = builder.Build();
 

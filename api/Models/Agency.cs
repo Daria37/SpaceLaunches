@@ -11,7 +11,7 @@ namespace api.Models
         public required string Name { get; set; }
         public required string Type { get; set; }
         public int CountryCode { get; set; }
-        // public List<Rocket> Rocket { get; set; } = new List<Rocket>();
-        // public List<Launches> Launches { get; set; } = new List<Launches>();
+        public List<Rocket> Rocket { get; set; } = new List<Rocket>();
+        public List<Launches> Launches { get; set; } = new List<Launches>();
     }
 }

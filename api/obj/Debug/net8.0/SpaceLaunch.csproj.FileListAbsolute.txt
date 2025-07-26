@@ -191,6 +191,8 @@ C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\runtimes\b
 C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\Microsoft.Build.Locator.dll
 C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.dll
 C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\Microsoft.CodeAnalysis.Workspaces.MSBuild.dll
+C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\StackExchange.Redis.dll
 C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
@@ -204,5 +206,3 @@ C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\ru\Microso
 C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
-C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
-C:\Users\admin\Desktop\Daria_code\C#\SpaceLaunch\api\bin\Debug\net8.0\StackExchange.Redis.dll
