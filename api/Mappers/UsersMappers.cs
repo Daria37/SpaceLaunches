@@ -9,7 +9,7 @@ namespace api.Mappers
 {
     public static class UsersMappers
     {
-        public static UsersDto ToUserstDto(this Users usersModel)
+        public static UsersDto ToUsersDto(this Users usersModel)
         {
             return new UsersDto
             {

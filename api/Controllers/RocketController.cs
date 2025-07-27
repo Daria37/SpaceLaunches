@@ -34,7 +34,7 @@ namespace api.Controllers
             return Ok(rocket);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var rocket = await _rocketRepo.GetByIdAsync(id);

@@ -32,6 +32,16 @@ namespace api.Data
                 entity.Property(r => r.Config).HasColumnName("Config");
                 entity.Property(r => r.AgencyID).HasColumnName("AgencyID");
             });
+            modelBuilder.Entity<Launches>(entity =>
+            {
+                entity.ToTable("Launches");
+                entity.Property(r => r.ID).HasColumnName("ID");
+                entity.Property(r => r.Name).HasColumnName("Name");
+                entity.Property(r => r.CreatedOnUTC).HasColumnName("CreatedOnUTC");
+                entity.Property(r => r.RocketID).HasColumnName("RocketID");
+                entity.Property(r => r.AgencyID).HasColumnName("AgencyID");
+                entity.Property(r => r.CountryCode).HasColumnName("CountryCode");
+            });
         }
     }
 }

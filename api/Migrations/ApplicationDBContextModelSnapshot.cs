@@ -50,25 +50,31 @@ namespace SpaceLaunch.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("ID");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("AgencyID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("AgencyID");
 
                     b.Property<int?>("CountryCode")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("CountryCode");
 
                     b.Property<DateTime>("CreatedOnUTC")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("CreatedOnUTC");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("Name");
 
                     b.Property<int?>("RocketID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("RocketID");
 
                     b.HasKey("ID");
 
@@ -76,7 +82,7 @@ namespace SpaceLaunch.Migrations
 
                     b.HasIndex("RocketID");
 
-                    b.ToTable("Launches");
+                    b.ToTable("Launches", (string)null);
                 });
 
             modelBuilder.Entity("api.Models.Rocket", b =>
