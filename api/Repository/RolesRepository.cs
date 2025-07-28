@@ -9,16 +9,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
 {
-    public class RolesRepository : IRolesRepository
-    {
-        private readonly ApplicationDBContext _context;
-        public RolesRepository(ApplicationDBContext context)
-        {
-            _context = context;
-        }
-        public async Task<List<Roles>> GetAllAsync()
-        {
-            return await _context.Roles.ToListAsync();
-        }
-    }
+    // public class RolesRepository : IRolesRepository
+    // {
+    //     private readonly ApplicationDBContext _context;
+    //     public RolesRepository(ApplicationDBContext context)
+    //     {
+    //         _context = context;
+    //     }
+    //     public async Task<List<Roles>> GetAllAsync()
+    //     {
+    //         return await _context.Roles.ToListAsync();
+    //     }
+    // }
 }

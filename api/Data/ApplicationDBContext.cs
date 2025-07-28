@@ -6,25 +6,45 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using api.Models;
 using Humanizer.DateTimeHumanizeStrategy;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Build.Framework;
 
 namespace api.Data
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext<AppUser>
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options)
         {
 
         }
 
-        public DbSet<Users> Users { get; set; }
-        public DbSet<Roles> Roles { get; set; }
         public DbSet<Rocket> Rocket { get; set; }
         public DbSet<Launches> Launches { get; set; }
         public DbSet<Agency> Agency { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            modelBuilder.Entity<Rocket>(entity =>
+            base.OnModelCreating(builder);
+
+            List<IdentityRole> roles = new List<IdentityRole>
+            {
+                new IdentityRole
+                {
+                    Name = "Admin",
+                    Id = "1",
+                    NormalizedName = "ADMIN"
+                },
+                new IdentityRole
+                {
+                    Name = "User",
+                    Id = "2",
+                    NormalizedName = "USER"
+                }
+            };
+            builder.Entity<IdentityRole>().HasData(roles);
+            
+            builder.Entity<Rocket>(entity =>
             {
                 entity.ToTable("Rocket");
                 entity.Property(r => r.ID).HasColumnName("ID");
@@ -32,7 +52,7 @@ namespace api.Data
                 entity.Property(r => r.Config).HasColumnName("Config");
                 entity.Property(r => r.AgencyID).HasColumnName("AgencyID");
             });
-            modelBuilder.Entity<Launches>(entity =>
+            builder.Entity<Launches>(entity =>
             {
                 entity.ToTable("Launches");
                 entity.Property(r => r.ID).HasColumnName("ID");
