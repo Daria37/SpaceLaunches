@@ -12,7 +12,7 @@ namespace api.Models
         public DateTime CreatedOnUTC { get; set; }
         public int? RocketID { get; set; }
         public int? AgencyID { get; set; }
-        public int? CountryCode { get; set; }
+        public string? CountryCode { get; set; }
         public Rocket? Rocket { get; set; }
         public Agency? Agency { get; set; }
     }

@@ -10,6 +10,6 @@ namespace api.Dtos.Agency
         public int ID { get; set; }
         public required string Name { get; set; }
         public required string Type { get; set; }
-        public int CountryCode { get; set; }
+        public string CountryCode { get; set; }
     }
 }

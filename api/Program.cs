@@ -85,6 +85,12 @@ builder.Services.AddScoped<IRocketRepository, RocketRepository>();
 builder.Services.AddScoped<ILaunchesRepository, LaunchesRepository>();
 builder.Services.AddScoped<IAgencyRepository, AgencyRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ISpaceDevsService, SpaceDevsService>();
+
+builder.Services.AddHttpClient("Client", o =>
+{
+    o.BaseAddress = new Uri("https://ll.thespacedevs.com/2.2.0/");
+});
 
 var app = builder.Build();
 

@@ -176,8 +176,8 @@ namespace SpaceLaunch.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
-                    b.Property<int>("CountryCode")
-                        .HasColumnType("integer");
+                    b.Property<string>("CountryCode")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -269,8 +269,8 @@ namespace SpaceLaunch.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("AgencyID");
 
-                    b.Property<int?>("CountryCode")
-                        .HasColumnType("integer")
+                    b.Property<string>("CountryCode")
+                        .HasColumnType("text")
                         .HasColumnName("CountryCode");
 
                     b.Property<DateTime>("CreatedOnUTC")

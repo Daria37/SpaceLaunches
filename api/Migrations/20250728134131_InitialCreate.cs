@@ -22,7 +22,7 @@ namespace SpaceLaunch.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Type = table.Column<string>(type: "text", nullable: false),
-                    CountryCode = table.Column<int>(type: "integer", nullable: false)
+                    CountryCode = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -205,7 +205,7 @@ namespace SpaceLaunch.Migrations
                     CreatedOnUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     RocketID = table.Column<int>(type: "integer", nullable: true),
                     AgencyID = table.Column<int>(type: "integer", nullable: true),
-                    CountryCode = table.Column<int>(type: "integer", nullable: true)
+                    CountryCode = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

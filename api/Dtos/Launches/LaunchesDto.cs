@@ -12,6 +12,6 @@ namespace api.Dtos.Launches
         public DateTime CreatedOnUTC { get; set; }
         public int? RocketID { get; set; }
         public int? AgencyID { get; set; }
-        public int? CountryCode { get; set; }
+        public string? CountryCode { get; set; }
     }
 }
