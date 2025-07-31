@@ -8,6 +8,7 @@ namespace api.Interfaces
 {
     public interface ISpaceDevsService
     {
-        Task<SpaceDevsLaunches> GetLaunchesAsync(CancellationToken cancellationToken);
+        // Task<SpaceDevsLaunches> GetLaunchesAsync(CancellationToken cancellationToken);
+        Task<List<SpaceDevsLaunches>> GetLaunchesAsync(CancellationToken cancellationToken = default);
     }
 }

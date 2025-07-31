@@ -47,8 +47,8 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDBContext>(
     options => options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
 
-// builder.Services.AddStackExchangeRedisCache(options =>
-//     options.Configuration = builder.Configuration.GetConnectionString("Cache"));
+builder.Services.AddStackExchangeRedisCache(options =>
+    options.Configuration = builder.Configuration.GetConnectionString("Cache"));
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {

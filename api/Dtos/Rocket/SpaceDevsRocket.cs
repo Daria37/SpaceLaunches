@@ -10,7 +10,7 @@ namespace api.Dtos.Rocket
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
-        // [JsonPropertyName("configuration")]
-        //     public Configuration Configuration { get; set; }
+        [JsonPropertyName("configuration")]
+        public SpaceDevsConfig Configuration { get; set; }
     }
 }
