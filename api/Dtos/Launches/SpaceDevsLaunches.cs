@@ -14,22 +14,21 @@ namespace api.Dtos.Launches
         [JsonProperty("id")]
         public string Id { get; set; }
 
-        // [JsonProperty("name")]
-        // public string Name { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
-        [JsonProperty("window_end")]
-        public DateTime WindowEnd { get; set; }
+        // [JsonProperty("window_end")]
+        // public DateTime WindowEnd { get; set; }
 
         [JsonProperty("window_start")]
         public DateTime WindowStart { get; set; }
-
-        [JsonProperty("pad")]
-        public SpaceDevsPad pad { get; set; }
 
         [JsonProperty("launch_service_provider")]
         public SpaceDevsAgency Agencies { get; set; }
 
         [JsonProperty("rocket")]
         public SpaceDevsRocket Rocket { get; set; }
+        [JsonProperty("pad")]
+        public SpaceDevsPad pad { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "uHXI1MfIQMY=",
+  "dgSpecHash": "WNBQ++zE1C8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\admin\\Desktop\\Daria_code\\C#\\SpaceLaunch\\api\\SpaceLaunch.csproj",
+  "projectFilePath": "c:\\Users\\admin\\Desktop\\Daria_code\\C#\\SpaceLaunch\\api\\SpaceLaunch.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\admin\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\admin\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

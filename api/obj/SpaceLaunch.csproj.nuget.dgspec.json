@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\admin\\Desktop\\Daria_code\\C#\\SpaceLaunch\\api\\SpaceLaunch.csproj": {}
+    "c:\\Users\\admin\\Desktop\\Daria_code\\C#\\SpaceLaunch\\api\\SpaceLaunch.csproj": {}
   },
   "projects": {
-    "C:\\Users\\admin\\Desktop\\Daria_code\\C#\\SpaceLaunch\\api\\SpaceLaunch.csproj": {
+    "c:\\Users\\admin\\Desktop\\Daria_code\\C#\\SpaceLaunch\\api\\SpaceLaunch.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\admin\\Desktop\\Daria_code\\C#\\SpaceLaunch\\api\\SpaceLaunch.csproj",
+        "projectUniqueName": "c:\\Users\\admin\\Desktop\\Daria_code\\C#\\SpaceLaunch\\api\\SpaceLaunch.csproj",
         "projectName": "SpaceLaunch",
-        "projectPath": "C:\\Users\\admin\\Desktop\\Daria_code\\C#\\SpaceLaunch\\api\\SpaceLaunch.csproj",
+        "projectPath": "c:\\Users\\admin\\Desktop\\Daria_code\\C#\\SpaceLaunch\\api\\SpaceLaunch.csproj",
         "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\admin\\Desktop\\Daria_code\\C#\\SpaceLaunch\\api\\obj\\",
+        "outputPath": "c:\\Users\\admin\\Desktop\\Daria_code\\C#\\SpaceLaunch\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config"

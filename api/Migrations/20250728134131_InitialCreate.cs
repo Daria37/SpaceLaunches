@@ -199,7 +199,7 @@ namespace SpaceLaunch.Migrations
                 name: "Launches",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    ID = table.Column<string>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     CreatedOnUTC = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),

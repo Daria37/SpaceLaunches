@@ -258,7 +258,7 @@ namespace SpaceLaunch.Migrations
 
             modelBuilder.Entity("api.Models.Launches", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<string>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasColumnName("ID");

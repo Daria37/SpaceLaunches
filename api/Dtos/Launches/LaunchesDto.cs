@@ -7,7 +7,7 @@ namespace api.Dtos.Launches
 {
     public class LaunchesDto
     {
-        public int ID { get; set; }
+        public required string ID { get; set; }
         public required string Name { get; set; }
         public DateTime CreatedOnUTC { get; set; }
         public int? RocketID { get; set; }

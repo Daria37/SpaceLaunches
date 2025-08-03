@@ -40,7 +40,7 @@ namespace api.Controllers
         {
             try
             {
-                var launches = await _spaceDevsService.GetLaunchesAsync(ct);
+                var launches = await _spaceDevsService.GetLaunchesAsync();
 
                 return Ok(launches);
             }

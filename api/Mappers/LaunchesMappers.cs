@@ -24,16 +24,16 @@ namespace api.Mappers
             };
         }
 
-        public static Launches ToLaunchesFromSpaceDevs(this SpaceDevsLaunches spacedevsLaunches, SpaceDevsAgency spaceDevsAgency, SpaceDevsRocket spaceDevsRocket, SpaceDevsPad spaceDevsPad)
+        public static Launches ToLaunchesFromSpaceDevs(this SpaceDevsLaunches spacedevsLaunches)
         {
             return new Launches
             {
-                ID = int.Parse(spacedevsLaunches.Id),
-                Name = spaceDevsRocket.Configuration.name,
+                ID = spacedevsLaunches.Id,
+                Name = spacedevsLaunches.Name,
                 CreatedOnUTC = spacedevsLaunches.WindowStart,
-                RocketID = spaceDevsRocket.Id,
-                AgencyID = spaceDevsAgency.id
-                // CountryCode = spaceDevsPad.location.country.alpha_2_code
+                RocketID = spacedevsLaunches.Rocket.Id,
+                AgencyID = spacedevsLaunches.Agencies.id,
+                CountryCode = spacedevsLaunches.pad.country
             };
         }
     }
