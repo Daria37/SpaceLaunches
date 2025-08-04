@@ -9,7 +9,7 @@ namespace api.Interfaces
 {
     public interface ISpaceDevsService
     {
-        Task<List<SpaceDevsLaunches>> GetLaunchesAsync(CancellationToken cancellationToken = default);
+        Task<List<Launches>> GetLaunchesAsync();
         // Task<List<SpaceDevsLaunches>> GetLaunchesAsync();
     }
 }

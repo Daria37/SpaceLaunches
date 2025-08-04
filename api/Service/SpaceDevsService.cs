@@ -12,33 +12,59 @@ using api.Dtos.Launches;
 using System.Net.Http;
 using System.Text.Json;
 using Newtonsoft.Json;
+using AutoMapper;
+using System.Text.Json.Serialization;
 
 namespace api.Service
 {
-    public class SpaceDevsService(IHttpClientFactory httpClientFactory) : ISpaceDevsService
-    // ISpaceDevsService
-    // {
-    // public async Task<List<SpaceDevsLaunches?>> GetLaunchesAsync(CancellationToken cancellationToken = default)
+    public class SpaceDevsService : ISpaceDevsService
     {
-            // private readonly HttpClient _httpClient;
-            // private readonly IHttpClientFactory _httpClientFactory;
-            // private IConfiguration _config;
-        // public SpaceDevsService(HttpClient httpClient, IConfiguration config)
-        // {
-        //     _httpClient = httpClient;
-        //     _config = config;
-        // }
-            // public async Task<List<SpaceDevsLaunches?>> GetLaunchesAsync()
-            public async Task<List<SpaceDevsLaunches?>> GetLaunchesAsync(CancellationToken cancellationToken = default)
+        private readonly HttpClient _httpClient;
+
+        public SpaceDevsService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
+        public async Task<List<Launches>> GetLaunchesAsync()
+        {
+            try
             {
-                var client = httpClientFactory.CreateClient("Client");
-                var response = await client.GetStringAsync("launch/?format=json&limit=10&offset=0");
-                var result = JsonConvert.DeserializeObject<SpaceDevsResponce>(response);
-                return result?.Results ?? new List<SpaceDevsLaunches>();
-                // var client = httpClientFactory.CreateClient("Client");
-                // string result = await client.GetStringAsync("launch/?format=json&limit=10&offset=0");
-                // var response = JsonConvert.DeserializeObject<SpaceDevsResponce>(result);
-                // return response?.Results ?? new List<SpaceDevsLaunches>();
+                var response = await _httpClient.GetAsync("https://ll.thespacedevs.com/2.2.0/launch/?format=json&limit=10");
+                response.EnsureSuccessStatusCode();
+
+                var json = await response.Content.ReadAsStringAsync();
+                var apiResponse = System.Text.Json.JsonSerializer.Deserialize<SpaceDevsResponce>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (apiResponse?.Results == null)
+                {
+                    return new List<Launches>();
+                }
+
+                var result = new List<Launches>();
+                foreach (var launchDto in apiResponse.Results)
+                {
+                    result.Add(new Launches
+                    {
+                        ID = launchDto.Id,
+                        Name = launchDto.Name,
+                        CreatedOnUTC = launchDto.WindowStart,
+                        AgencyID = launchDto.LaunchServiceProvider?.Id ?? 0,
+                        RocketID = launchDto.Rocket?.Id ?? 0,
+                        CountryCode = launchDto.Pad?.Location.CountryCode ?? "N/A"
+                    });
+                }
+
+                return result;
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка при получении данных: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

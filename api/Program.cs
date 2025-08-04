@@ -1,5 +1,8 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using api.Data;
 using api.Interfaces;
+using api.Mappers;
 using api.Models;
 using api.Repository;
 using api.Service;
@@ -86,6 +89,12 @@ builder.Services.AddScoped<ILaunchesRepository, LaunchesRepository>();
 builder.Services.AddScoped<IAgencyRepository, AgencyRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ISpaceDevsService, SpaceDevsService>();
+
+builder.Services.Configure<JsonSerializerOptions>(options =>
+{
+    options.PropertyNameCaseInsensitive = true;
+    options.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddHttpClient("Client", o =>
 {

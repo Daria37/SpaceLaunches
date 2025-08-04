@@ -29,13 +29,6 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        // public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
-        // {
-        //     var launches = await _launchesRepo.GetAllAsync(query);
-        //     var launchesDto = launches.Select(s => s.ToLaunchesDto());
-
-        //     return Ok(launchesDto);
-        // }
         public async Task<ActionResult<SpaceDevsLaunches>> GetLaunches(CancellationToken ct)
         {
             try

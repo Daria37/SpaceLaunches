@@ -23,18 +23,5 @@ namespace api.Mappers
                 CountryCode = launchesModel.CountryCode
             };
         }
-
-        public static Launches ToLaunchesFromSpaceDevs(this SpaceDevsLaunches spacedevsLaunches)
-        {
-            return new Launches
-            {
-                ID = spacedevsLaunches.Id,
-                Name = spacedevsLaunches.Name,
-                CreatedOnUTC = spacedevsLaunches.WindowStart,
-                RocketID = spacedevsLaunches.Rocket.Id,
-                AgencyID = spacedevsLaunches.Agencies.id,
-                CountryCode = spacedevsLaunches.pad.country
-            };
-        }
     }
 }
