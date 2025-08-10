@@ -20,10 +20,27 @@ namespace api.Controllers
     {
         private readonly ApplicationDBContext _context;
         private readonly IRocketRepository _rocketRepo;
-        public RocketController(ApplicationDBContext context, IRocketRepository rocketRepo)
+        private readonly ISpaceDevsService _spaceDevsService;
+        public RocketController(ApplicationDBContext context, IRocketRepository rocketRepo, ISpaceDevsService spaceDevsService)
         {
             _rocketRepo = rocketRepo;
             _context = context;
+            _spaceDevsService = spaceDevsService;
+        }
+
+        [HttpGet("api")]
+        public async Task<ActionResult<SpaceDevsRocket>> GetRocket(CancellationToken ct)
+        {
+            try
+            {
+                var rocket = await _spaceDevsService.GetRocketAsync();
+
+                return Ok(rocket);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet]

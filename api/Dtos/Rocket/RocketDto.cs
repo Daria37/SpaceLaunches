@@ -13,8 +13,8 @@ namespace api.Dtos.Rocket
         public int ID { get; set; }
         [Column("Name")]
         public required string Name { get; set; }
-        [Column("Config")]
-        public required string Config { get; set; }
+        // [Column("Config")]
+        // public required string Config { get; set; }
         [Column("AgencyID")]
         public int AgencyID { get; set; }
     }

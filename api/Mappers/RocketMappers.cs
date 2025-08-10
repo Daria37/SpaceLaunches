@@ -15,7 +15,6 @@ namespace api.Mappers
             {
                 ID = rocketModel.ID,
                 Name = rocketModel.Name,
-                Config = rocketModel.Config,
                 AgencyID = rocketModel.AgencyID
             };
         }
@@ -25,7 +24,6 @@ namespace api.Mappers
             {
                 ID = rocketDto.ID,
                 Name = rocketDto.Name,
-                Config = rocketDto.Config,
                 AgencyID = rocketDto.AgencyID
             };
         }

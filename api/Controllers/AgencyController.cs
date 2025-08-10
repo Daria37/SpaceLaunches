@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos.Agency;
 using api.Interfaces;
 using api.Mappers;
 using Microsoft.AspNetCore.Components;
@@ -15,9 +16,11 @@ namespace api.Controllers
     public class AgencyController : ControllerBase
     {
         private readonly IAgencyRepository _agencyRepo;
-        public AgencyController(IAgencyRepository agencyRepo)
+        private readonly ISpaceDevsService _spaceDevsService;
+        public AgencyController(IAgencyRepository agencyRepo, ISpaceDevsService spaceDevsService)
         {
             _agencyRepo = agencyRepo;
+            _spaceDevsService = spaceDevsService;
         }
 
         [HttpGet]
@@ -27,6 +30,21 @@ namespace api.Controllers
             var agencyDto = agency.Select(s => s.ToAgencyDto());
 
             return Ok(agencyDto);
+        }
+
+        [HttpGet("api")]
+        public async Task<ActionResult<SpaceDevsAgency>> GetRocket(CancellationToken ct)
+        {
+            try
+            {
+                var agency = await _spaceDevsService.GetAgencyAsync();
+
+                return Ok(agency);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }

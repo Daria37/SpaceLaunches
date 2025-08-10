@@ -43,25 +43,25 @@ namespace api.Data
                 }
             };
             builder.Entity<IdentityRole>().HasData(roles);
-            
-            builder.Entity<Rocket>(entity =>
-            {
-                entity.ToTable("Rocket");
-                entity.Property(r => r.ID).HasColumnName("ID");
-                entity.Property(r => r.Name).HasColumnName("Name");
-                entity.Property(r => r.Config).HasColumnName("Config");
-                entity.Property(r => r.AgencyID).HasColumnName("AgencyID");
-            });
-            builder.Entity<Launches>(entity =>
-            {
-                entity.ToTable("Launches");
-                entity.Property(r => r.ID).HasColumnName("ID");
-                entity.Property(r => r.Name).HasColumnName("Name");
-                entity.Property(r => r.CreatedOnUTC).HasColumnName("CreatedOnUTC");
-                entity.Property(r => r.RocketID).HasColumnName("RocketID");
-                entity.Property(r => r.AgencyID).HasColumnName("AgencyID");
-                entity.Property(r => r.CountryCode).HasColumnName("CountryCode");
-            });
+
+            // builder.Entity<Rocket>(entity =>
+            // {
+            //     entity.ToTable("Rocket");
+            //     entity.Property(r => r.ID).HasColumnName("ID");
+            //     entity.Property(r => r.Name).HasColumnName("Name");
+            //     entity.Property(r => r.Config).HasColumnName("Config");
+            //     entity.Property(r => r.AgencyID).HasColumnName("AgencyID");
+            // });
+            // builder.Entity<Launches>(entity =>
+            // {
+            //     // entity.ToTable("Launches");
+            //     entity.Property(r => r.ID).HasColumnName("ID");
+            //     entity.Property(r => r.Name).HasColumnName("Name");
+            //     entity.Property(r => r.CreatedOnUTC).HasColumnName("CreatedOnUTC");
+            //     entity.Property(r => r.RocketID).HasColumnName("RocketID");
+            //     entity.Property(r => r.AgencyID).HasColumnName("AgencyID");
+            //     entity.Property(r => r.CountryCode).HasColumnName("CountryCode");
+            // });
         }
     }
 }

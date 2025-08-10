@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using api.Dtos.Agency;
 
 namespace api.Dtos.Rocket
 {
@@ -12,5 +13,7 @@ namespace api.Dtos.Rocket
         public int Id { get; set; }
         [JsonPropertyName("configuration")]
         public SpaceDevsConfig Configuration { get; set; }
+        [JsonPropertyName("launch_service_provider")]
+        public SpaceDevsAgency Agency { get; set; }
     }
 }

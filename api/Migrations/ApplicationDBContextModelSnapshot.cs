@@ -189,7 +189,7 @@ namespace SpaceLaunch.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Agency", (string)null);
+                    b.ToTable("Agency");
                 });
 
             modelBuilder.Entity("api.Models.AppUser", b =>
@@ -259,32 +259,23 @@ namespace SpaceLaunch.Migrations
             modelBuilder.Entity("api.Models.Launches", b =>
                 {
                     b.Property<string>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("ID");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+                        .HasColumnType("text");
 
                     b.Property<int?>("AgencyID")
-                        .HasColumnType("integer")
-                        .HasColumnName("AgencyID");
+                        .HasColumnType("integer");
 
                     b.Property<string>("CountryCode")
-                        .HasColumnType("text")
-                        .HasColumnName("CountryCode");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedOnUTC")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("CreatedOnUTC");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("Name");
+                        .HasColumnType("text");
 
                     b.Property<int?>("RocketID")
-                        .HasColumnType("integer")
-                        .HasColumnName("RocketID");
+                        .HasColumnType("integer");
 
                     b.HasKey("ID");
 
@@ -292,7 +283,7 @@ namespace SpaceLaunch.Migrations
 
                     b.HasIndex("RocketID");
 
-                    b.ToTable("Launches", (string)null);
+                    b.ToTable("Launches");
                 });
 
             modelBuilder.Entity("api.Models.Rocket", b =>
@@ -308,10 +299,10 @@ namespace SpaceLaunch.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("AgencyID");
 
-                    b.Property<string>("Config")
+                    b.Property<string>("Configuration")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("Config");
+                        .HasColumnName("Configuration");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -322,7 +313,7 @@ namespace SpaceLaunch.Migrations
 
                     b.HasIndex("AgencyID");
 
-                    b.ToTable("Rocket", (string)null);
+                    b.ToTable("Rocket");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

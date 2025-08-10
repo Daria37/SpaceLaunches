@@ -9,7 +9,9 @@ namespace api.Interfaces
 {
     public interface ISpaceDevsService
     {
+        Task<SpaceDevsResponce> GetAllDataAsync();
+        Task<List<Rocket>> GetRocketAsync();
         Task<List<Launches>> GetLaunchesAsync();
-        // Task<List<SpaceDevsLaunches>> GetLaunchesAsync();
+        Task<List<Agency>> GetAgencyAsync();
     }
 }

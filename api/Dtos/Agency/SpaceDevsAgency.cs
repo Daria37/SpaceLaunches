@@ -10,5 +10,11 @@ namespace api.Dtos.Agency
     {
         [JsonProperty("id")]
         public int id { get; set; }
+        [JsonProperty("name")]
+        public required string Name { get; set; }
+        [JsonProperty("type")]
+        public required string Type { get; set; }
+        [JsonProperty("country_code")]
+        public string? CountryCode { get; set; }
     }
 }

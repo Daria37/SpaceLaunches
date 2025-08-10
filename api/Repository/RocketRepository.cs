@@ -58,8 +58,7 @@ namespace api.Repository
             }
 
             existingRocket.ID = rocketDto.ID;
-            existingRocket.Name = rocketDto.Name;
-            existingRocket.Config = rocketDto.Config;
+            // existingRocket.Name = rocketDto.Name;
             existingRocket.AgencyID = rocketDto.AgencyID;
 
             await _context.SaveChangesAsync();

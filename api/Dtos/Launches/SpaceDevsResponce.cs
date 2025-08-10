@@ -45,18 +45,26 @@ namespace api.Dtos.Launches
         public PadDto Pad { get; set; }
     }
 
+    public class RocketDto
+    {
+        [JsonPropertyName("id")]
+        public int ID { get; set; }
+        [JsonPropertyName("configuration")]
+        public RocketConfigurationDto Configuration { get; set; }
+        [JsonPropertyName("launch_service_provider")]
+        public LaunchServiceProviderDto LaunchServiceProvider { get; set; }
+    }
+
     public class LaunchServiceProviderDto
     {
         [JsonPropertyName("id")]
         public int Id { get; set; }
-    }
-
-    public class RocketDto
-    {
-         [JsonPropertyName("id")]
-        public int Id { get; set; }
-        [JsonPropertyName("configuration")]
-        public RocketConfigurationDto Configuration { get; set; }
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+        [JsonPropertyName("type")]
+        public string Type { get; set; }
+        [JsonPropertyName("pad")]
+        public PadDto Pad { get; set; }
     }
 
     public class RocketConfigurationDto
