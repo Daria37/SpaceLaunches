@@ -13,5 +13,6 @@ namespace api.Interfaces
         Task<List<Rocket>> GetRocketAsync();
         Task<List<Launches>> GetLaunchesAsync();
         Task<List<Agency>> GetAgencyAsync();
+        Task<bool> SaveToDatabaseAsync();
     }
 }

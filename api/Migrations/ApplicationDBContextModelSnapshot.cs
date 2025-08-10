@@ -299,19 +299,12 @@ namespace SpaceLaunch.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("AgencyID");
 
-                    b.Property<string>("Configuration")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("Configuration");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("Name");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("AgencyID");
 
                     b.ToTable("Rocket");
                 });
@@ -370,37 +363,16 @@ namespace SpaceLaunch.Migrations
             modelBuilder.Entity("api.Models.Launches", b =>
                 {
                     b.HasOne("api.Models.Agency", "Agency")
-                        .WithMany("Launches")
+                        .WithMany()
                         .HasForeignKey("AgencyID");
 
                     b.HasOne("api.Models.Rocket", "Rocket")
-                        .WithMany("Lauches")
+                        .WithMany()
                         .HasForeignKey("RocketID");
 
                     b.Navigation("Agency");
 
                     b.Navigation("Rocket");
-                });
-
-            modelBuilder.Entity("api.Models.Rocket", b =>
-                {
-                    b.HasOne("api.Models.Agency", null)
-                        .WithMany("Rocket")
-                        .HasForeignKey("AgencyID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("api.Models.Agency", b =>
-                {
-                    b.Navigation("Launches");
-
-                    b.Navigation("Rocket");
-                });
-
-            modelBuilder.Entity("api.Models.Rocket", b =>
-                {
-                    b.Navigation("Lauches");
                 });
 #pragma warning restore 612, 618
         }

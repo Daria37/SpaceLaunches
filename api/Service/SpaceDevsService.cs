@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using AutoMapper;
 using System.Text.Json.Serialization;
 using api.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Service
 {
@@ -42,59 +43,12 @@ namespace api.Service
                 });
                 return apiResponse;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                Console.Write(e);
                 return new SpaceDevsResponce { Results = new List<LaunchDto>() };
             }
         }
-
-
-        // public async Task<List<Launches>> GetLaunchesAsync()
-        // {
-        //     try
-        //     {
-        //         var response = await _httpClient.GetAsync("https://ll.thespacedevs.com/2.2.0/launch/?format=json&limit=10");
-        //         response.EnsureSuccessStatusCode();
-
-        //         var json = await response.Content.ReadAsStringAsync();
-        //         var apiResponse = System.Text.Json.JsonSerializer.Deserialize<SpaceDevsResponce>(json, new JsonSerializerOptions
-        //         {
-        //             PropertyNameCaseInsensitive = true
-        //         });
-
-        //         if (apiResponse?.Results == null)
-        //         {
-        //             return new List<Launches>();
-        //         }
-
-        //         var result = new List<Launches>();
-        //         foreach (var launchDto in apiResponse.Results)
-        //         {
-        //             if (!_context.Launches.Any(l => l.ID == launchDto.Id))
-        //             {
-        //                 var newLaunch = new Launches
-        //                 {
-        //                     ID = launchDto.Id,
-        //                     Name = launchDto.Name,
-        //                     CreatedOnUTC = launchDto.WindowStart,
-        //                     AgencyID = launchDto.LaunchServiceProvider?.Id ?? 0,
-        //                     RocketID = launchDto.Rocket?.ID ?? 0,
-        //                     CountryCode = launchDto.Pad?.Location.CountryCode ?? "N/A",
-        //                 };
-        //             }
-        //         }
-
-        //         // await _context.Launches.AddRangeAsync(result);
-        //         // await _context.SaveChangesAsync();
-
-        //         return result;
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         Console.WriteLine($"Ошибка при получении данных: {ex.Message}");
-        //         throw;
-        //     }
-        // }
 
         public async Task<List<Rocket>> GetRocketAsync()
         {
@@ -145,52 +99,74 @@ namespace api.Service
             .ToList();
         }
 
+        public async Task<bool> SaveToDatabaseAsync()
+        {
+            try
+            {
+                // Получаем данные из API
+                var response = await GetAllDataAsync();
 
-        // public async Task<List<Rocket>> GetRocketAsync()
-        // {
-        //     try
-        //     {
-        //         var response = await _httpClient.GetAsync("https://ll.thespacedevs.com/2.2.0/launch/?format=json&limit=10");
-        //         response.EnsureSuccessStatusCode();
+                // Сохраняем ракеты
+                var rockets = await GetRocketAsync();
 
-        //         var json = await response.Content.ReadAsStringAsync();
-        //         var apiResponse = System.Text.Json.JsonSerializer.Deserialize<SpaceDevsResponce>(json, new JsonSerializerOptions
-        //         {
-        //             PropertyNameCaseInsensitive = true
-        //         });
+                foreach (var rocketDto in rockets)
+                {
+                    if (!await _context.Rocket.AnyAsync(r => r.ID == rocketDto.ID))
+                    {
+                        _context.Rocket.Add(new Rocket
+                        {
+                            ID = rocketDto.ID,
+                            Name = rocketDto.Name ?? "None",
+                            AgencyID = rocketDto.AgencyID
+                        });
+                    }
+                }
 
-        //         if (apiResponse?.Results == null)
-        //         {
-        //             return new List<Rocket>();
-        //         }
+                // Сохраняем агентства
+                var agencies = await GetAgencyAsync();
 
-        //         var result = new List<Rocket>();
-        //         foreach (var rocketDto in apiResponse.Results)
-        //         {
-        //             if (!_context.Rocket.Any(l => l.ID == rocketDto.Id))
-        //             {
-        //                 var newRocket = new Rocket
-        //                 {
-        //                     ID = rocketDto.Id,
-        //                     Name = launchDto.Name,
-        //                     CreatedOnUTC = launchDto.WindowStart,
-        //                     AgencyID = launchDto.LaunchServiceProvider?.Id ?? 0,
-        //                     RocketID = launchDto.Rocket?.Id ?? 0,
-        //                     CountryCode = launchDto.Pad?.Location.CountryCode ?? "N/A",
-        //                 };
-        //             }
-        //         }
+                foreach (var agencyDto in agencies)
+                {
+                    if (!await _context.Agency.AnyAsync(a => a.ID == agencyDto.ID))
+                    {
+                        _context.Agency.Add(new Agency
+                        {
+                            ID = agencyDto.ID,
+                            Name = agencyDto.Name,
+                            Type = agencyDto.Type,
+                            CountryCode = agencyDto.CountryCode
+                        });
+                    }
+                }
 
-        //         // await _context.Launches.AddRangeAsync(result);
-        //             // await _context.SaveChangesAsync();
+                var launches = await GetLaunchesAsync();
 
-        //             return result;
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         Console.WriteLine($"Ошибка при получении данных: {ex.Message}");
-        //         throw;
-        //     }
-        // }
+                // Сохраняем запуски
+                foreach (var launchDto in launches)
+                {
+                    if (!await _context.Launches.AnyAsync(l => l.ID == launchDto.ID))
+                    {
+                        _context.Launches.Add(new Launches
+                        {
+                            ID = launchDto.ID,
+                            Name = launchDto.Name,
+                            CreatedOnUTC = launchDto.CreatedOnUTC,
+                            RocketID = launchDto.Rocket?.ID,
+                            AgencyID = launchDto.Agency?.ID,
+                            CountryCode = launchDto.CountryCode
+                        });
+                    }
+                }
+
+                var saved = await _context.SaveChangesAsync();
+                Console.Write($"Saved {saved} entities to database");
+                return saved > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex);
+                return false;
+            }
+        }
     }
 }
