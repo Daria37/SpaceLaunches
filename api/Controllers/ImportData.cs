@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers
 {
     [ApiController]
-    [Route("api/data")]
+    [Route("api/import")]
     public class ImportData : ControllerBase
     {
         private readonly ISpaceDevsService _spaceDevsService;

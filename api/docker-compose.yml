@@ -9,6 +9,8 @@ services:
       - "8080:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - app-network
 
   products.database:
     image: postgres:latest
@@ -20,10 +22,17 @@ services:
     volumes:
       - ./.containers/products-db:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 5433:5432
+    networks:
+      - app-network
 
   products.cache:
     image: redis:latest
     restart: always
     ports:
       - '6379:6379'
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge

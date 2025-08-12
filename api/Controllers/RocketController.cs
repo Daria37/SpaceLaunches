@@ -28,7 +28,7 @@ namespace api.Controllers
             _spaceDevsService = spaceDevsService;
         }
 
-        [HttpGet("api")]
+        [HttpGet("data")]
         public async Task<ActionResult<SpaceDevsRocket>> GetRocket(CancellationToken ct)
         {
             try

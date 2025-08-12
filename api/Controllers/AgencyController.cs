@@ -32,7 +32,7 @@ namespace api.Controllers
             return Ok(agencyDto);
         }
 
-        [HttpGet("api")]
+        [HttpGet("data")]
         public async Task<ActionResult<SpaceDevsAgency>> GetRocket(CancellationToken ct)
         {
             try

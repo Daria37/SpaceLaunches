@@ -306,6 +306,8 @@ namespace SpaceLaunch.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("AgencyID");
+
                     b.ToTable("Rocket");
                 });
 
@@ -363,16 +365,37 @@ namespace SpaceLaunch.Migrations
             modelBuilder.Entity("api.Models.Launches", b =>
                 {
                     b.HasOne("api.Models.Agency", "Agency")
-                        .WithMany()
+                        .WithMany("Launches")
                         .HasForeignKey("AgencyID");
 
                     b.HasOne("api.Models.Rocket", "Rocket")
-                        .WithMany()
+                        .WithMany("Lauches")
                         .HasForeignKey("RocketID");
 
                     b.Navigation("Agency");
 
                     b.Navigation("Rocket");
+                });
+
+            modelBuilder.Entity("api.Models.Rocket", b =>
+                {
+                    b.HasOne("api.Models.Agency", null)
+                        .WithMany("Rocket")
+                        .HasForeignKey("AgencyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("api.Models.Agency", b =>
+                {
+                    b.Navigation("Launches");
+
+                    b.Navigation("Rocket");
+                });
+
+            modelBuilder.Entity("api.Models.Rocket", b =>
+                {
+                    b.Navigation("Lauches");
                 });
 #pragma warning restore 612, 618
         }

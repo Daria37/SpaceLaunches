@@ -18,6 +18,6 @@ namespace api.Models
         // [Column("Configuration")]
         // public string Configuration { get; set; }
 
-        // public List<Launches> Lauches { get; set; } = new List<Launches>();
+        public List<Launches> Lauches { get; set; } = new List<Launches>();
     }
 }

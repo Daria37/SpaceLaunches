@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,7 +52,10 @@ builder.Services.AddDbContext<ApplicationDBContext>(
     options => options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
 
 builder.Services.AddStackExchangeRedisCache(options =>
-    options.Configuration = builder.Configuration.GetConnectionString("Cache"));
+{
+    options.Configuration = "products.cache:6379,abortConnect=false,connectTimeout=5000,syncTimeout=5000,allowAdmin=true";
+    options.InstanceName = "SpaceLaunches_";
+});
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
@@ -89,6 +93,7 @@ builder.Services.AddScoped<ILaunchesRepository, LaunchesRepository>();
 builder.Services.AddScoped<IAgencyRepository, AgencyRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ISpaceDevsService, SpaceDevsService>();
+// builder.Services.AddSingleton<RedisCacheService>();
 
 builder.Services.Configure<JsonSerializerOptions>(options =>
 {
