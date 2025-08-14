@@ -10,8 +10,12 @@ namespace api.Interfaces
     public interface ISpaceDevsService
     {
         Task<SpaceDevsResponce> GetAllDataAsync();
+        Task<SpaceDevsResponce> GetData2020Async();
         Task<List<Rocket>> GetRocketAsync();
         Task<List<Launches>> GetLaunchesAsync();
+        Task<List<Launches>> GetLaunchesAfter2020Async();
+        Task<List<Agency>> GetAgencyAfter2020Async();
+        Task<List<Rocket>> GetRocketAfter2020Async();
         Task<List<Agency>> GetAgencyAsync();
         Task<bool> SaveToDatabaseAsync();
     }

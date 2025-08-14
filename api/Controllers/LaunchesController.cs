@@ -10,6 +10,7 @@ using api.Interfaces;
 using api.Mappers;
 using api.Models;
 using api.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,18 +26,16 @@ namespace api.Controllers
         private readonly ILaunchesRepository _launchesRepo;
         private readonly ISpaceDevsService _spaceDevsService;
         private readonly ApplicationDBContext _context;
-        // private readonly RedisCacheService _redisCache;
 
         public LaunchesController(ApplicationDBContext context, ILaunchesRepository launchesRepo, ISpaceDevsService spaceDevsService)
         {
             _launchesRepo = launchesRepo;
             _spaceDevsService = spaceDevsService;
             _context = context;
-            // _redisCache = redisCache;
-            // , RedisCacheService redisCache
         }
 
         [HttpGet("data")]
+        // [Authorize(Roles = "User, Admin")]
         public async Task<ActionResult<SpaceDevsLaunches>> GetLaunches(CancellationToken ct)
         {
             try
@@ -51,66 +50,60 @@ namespace api.Controllers
             }
         }
 
-        // [HttpGet("redis")]
-        // public async Task<IActionResult> GetLaunches([FromQuery] string? search, [FromQuery] string? filter)
+        // [HttpGet("after-2020")]
+        // [Authorize(Roles = "User,Admin")] // Доступно для User и Admin
+        // public async Task<ActionResult<SpaceDevsLaunches>> GetLaunchesAfter2020()
         // {
-        //     // Генерируем ключ на основе параметров запроса
-        //     string cacheKey = $"launches:{search}:{filter}";
-
-        //     // Проверяем кеш
-        //     var cachedLaunches = await _redisCache.GetFromCacheAsync<List<Launches>>(cacheKey);
-        //     if (cachedLaunches != null)
+        //     try
         //     {
-        //         return Ok(cachedLaunches);
+        //         var launches = await _spaceDevsService.GetLaunchesAsync();
+
+        //         return Ok(launches);
         //     }
-
-        //     // Если нет в кеше — запрашиваем из БД
-        //     var launches = await _spaceDevsService.GetLaunchesAsync(search, filter);
-
-        //     // Сохраняем в кеш на 5 минут
-        //     await _redisCache.SaveToCacheAsync(cacheKey, launches, TimeSpan.FromMinutes(5));
-
-        //     return Ok(launches);
+        //     catch (Exception ex)
+        //     {
+        //         return StatusCode(500, $"Internal server error: {ex.Message}");
+        //     }
         // }
 
-        // [HttpPost]
-        // public async Task<IActionResult> AddLaunch([FromBody] Launches launch)
-        // {
-        //     var result = await _spaceDevsService.GetLaunchesAsync();
-
-        //     // Инвалидируем кеш (если добавили новый запуск)
-        //     await _redisCache.RemoveFromCacheAsync("launches:*"); // Можно реализовать удаление по паттерну
-
-        //     return Ok(result);
-        // }
-    
-        [HttpGet("search")]
+        [HttpGet("search_filter")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<ActionResult<IEnumerable<Launches>>> SearchLaunches(
-            [FromQuery] string searchTerm,
+            [FromQuery] string? searchTerm,
+            [FromQuery] string? countryCode,
             [FromServices] IDistributedCache cache)
         {
-            var cacheKey = $"launches_search_{searchTerm}";
+            // Формируем ключ кэша на основе всех параметров фильтрации
+            var cacheKey = $"launches_search_{searchTerm}_{countryCode}";
 
-            // Пытаемся получить данные из кеша
+            // Проверяем кэш
             var cachedData = await cache.GetStringAsync(cacheKey);
             if (cachedData != null)
             {
                 return Ok(JsonSerializer.Deserialize<List<Launches>>(cachedData));
             }
 
-            // Если нет в кеше, получаем из базы
-            var launches = await _context.Launches
-                .Where(l => l.Name.Contains(searchTerm) || l.Name.Contains(searchTerm))
-                .Where(l => l.Name.ToLower().Contains(searchTerm.ToLower()))
-                .ToListAsync();
+            // Запрос к БД с учетом фильтров
+            var query = _context.Launches.AsQueryable();
 
-            // Сохраняем в кеш на 5 минут
-            await cache.SetStringAsync(cacheKey, 
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(l => l.Name.Contains(searchTerm));
+            }
+
+            if (!string.IsNullOrEmpty(countryCode))
+            {
+                query = query.Where(l => l.CountryCode == countryCode);
+            }
+
+            var launches = await query.ToListAsync();
+
+            // Сохраняем в кэш
+            await cache.SetStringAsync(
+                cacheKey,
                 JsonSerializer.Serialize(launches),
-                new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-                });
+                new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) }
+            );
 
             return Ok(launches);
         }

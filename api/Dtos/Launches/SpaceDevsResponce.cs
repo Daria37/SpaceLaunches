@@ -29,8 +29,8 @@ namespace api.Dtos.Launches
         [JsonPropertyName("id")]
         public string Id { get; set; }
         
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+        // [JsonPropertyName("name")]
+        // public string Name { get; set; }
         
         [JsonPropertyName("window_start")]
         public DateTime WindowStart { get; set; }

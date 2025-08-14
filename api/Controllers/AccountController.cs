@@ -53,47 +53,32 @@ namespace api.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
         {
-            try
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var appUser = new AppUser
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                UserName = registerDto.Username,
+                Email = registerDto.Email
+            };
 
-                var appUser = new AppUser
-                {
-                    UserName = registerDto.Username,
-                    Email = registerDto.Email
-                };
+            var createdUser = await _userManager.CreateAsync(appUser, registerDto.Password);
 
-                var createdUser = await _userManager.CreateAsync(appUser, registerDto.Password);
-
-                if (createdUser.Succeeded)
-                {
-                    var roleResult = await _userManager.AddToRoleAsync(appUser, "User");
-                    if (roleResult.Succeeded)
-                    {
-                        return Ok(
-                            new NewUserDto
-                            {
-                                UserName = appUser.UserName,
-                                Email = appUser.Email,
-                                Token = _tokenService.CreateToken(appUser)
-                            }
-                        );
-                    }
-                    else
-                    {
-                        return StatusCode(500, roleResult.Errors);
-                    }
-                }
-                else
-                {
-                    return StatusCode(500, createdUser.Errors);
-                }
-            }
-            catch (Exception e)
+            if (createdUser.Succeeded)
             {
-                return StatusCode(500, e);
+                // Назначаем роль "User" по умолчанию
+                await _userManager.AddToRoleAsync(appUser, "User"); // <- Уже есть у вас
+
+                return Ok(new NewUserDto
+                {
+                    UserName = appUser.UserName,
+                    Email = appUser.Email,
+                    Token = _tokenService.CreateToken(appUser)
+                });
             }
+
+            return BadRequest(createdUser.Errors);
         }
+
     }
 }
