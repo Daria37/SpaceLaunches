@@ -47,7 +47,7 @@ namespace api.Controllers
         {
             try
             {
-                var agency = await _spaceDevsService.GetAgencyAsync();
+                var agency = await _spaceDevsService.GetAgencyAfter2020Async();
 
                 return Ok(agency);
             }

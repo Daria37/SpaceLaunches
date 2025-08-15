@@ -37,7 +37,7 @@ namespace api.Controllers
         {
             try
             {
-                var rocket = await _spaceDevsService.GetRocketAsync();
+                var rocket = await _spaceDevsService.GetRocketAfter2020Async();
 
                 return Ok(rocket);
             }

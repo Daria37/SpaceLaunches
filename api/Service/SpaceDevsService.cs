@@ -137,7 +137,7 @@ namespace api.Service
                 Name = rocket.Rocket.Configuration?.Name ?? "None",
                 AgencyID = rocket.LaunchServiceProvider?.Id ?? 0
             })
-            .DistinctBy(launch => launch.ID)
+            .DistinctBy(rocket => rocket.ID)
             .ToList();
         }
 
@@ -153,7 +153,7 @@ namespace api.Service
                 Type = agency.LaunchServiceProvider.Type ?? "None",
                 CountryCode = agency.Pad?.Location.CountryCode ?? "None"
             })
-            .DistinctBy(launch => launch.ID)
+            .DistinctBy(agency => agency.ID)
             .ToList();
         }
 

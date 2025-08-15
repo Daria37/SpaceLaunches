@@ -50,21 +50,21 @@ namespace api.Controllers
             }
         }
 
-        // [HttpGet("after-2020")]
-        // [Authorize(Roles = "User,Admin")] // Доступно для User и Admin
-        // public async Task<ActionResult<SpaceDevsLaunches>> GetLaunchesAfter2020()
-        // {
-        //     try
-        //     {
-        //         var launches = await _spaceDevsService.GetLaunchesAsync();
+        [HttpGet("after-2020")]
+        [Authorize(Roles = "Admin")] // Доступно для User и Admin
+        public async Task<ActionResult<SpaceDevsLaunches>> GetLaunchesAfter2020()
+        {
+            try
+            {
+                var launches = await _spaceDevsService.GetLaunchesAfter2020Async();
 
-        //         return Ok(launches);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return StatusCode(500, $"Internal server error: {ex.Message}");
-        //     }
-        // }
+                return Ok(launches);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
         [HttpGet("search_filter")]
         [Authorize(Roles = "User,Admin")]
