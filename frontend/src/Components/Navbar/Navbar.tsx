@@ -16,8 +16,8 @@ const Navbar = (props: Props) => {
             <img src={logo} alt="Space Launches Logo" className="h-20 md:h-24 w-auto" />
           </Link>
           <div className="hidden font-bold lg:flex">
-            <Link to="/search" className="text-black hover:text-darkBlue">
-              Search
+            <Link to="/launches" className="text-black hover:text-darkBlue">
+              All Launches
             </Link>
           </div>
         </div>
@@ -31,19 +31,19 @@ const Navbar = (props: Props) => {
               Logout
             </a>
           </div>
-        ) : (
+        ) : ( */}
           <div className="hidden lg:flex items-center space-x-6 text-back">
             <Link to="/login" className="hover:text-darkBlue">
               Login
             </Link>
             <Link
               to="/register"
-              className="px-8 py-3 font-bold rounded text-white bg-lightGreen hover:opacity-70"
+              className="px-8 py-3 font-bold rounded text-white bg-darkBlue hover:opacity-70"
             >
               Signup
             </Link>
           </div>
-        )} */}
+        {/* )} */}
       </div>
     </nav>
   );

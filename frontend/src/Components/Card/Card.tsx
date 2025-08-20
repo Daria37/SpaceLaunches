@@ -3,6 +3,8 @@ import React, { JSX, SyntheticEvent, useEffect, useState } from "react";
 import "./Card.css";
 import { ISpaceLaunch } from "../../spacelaunches";
 import { fetchLaunches } from "../../api";
+import { Link } from "react-router";
+import LaunchImage from "../Images/LaunchImage";
 // import AddPortfolio from "../Portfolio/AddPortfolio/AddPortfolio";
 
 interface Props {
@@ -11,7 +13,16 @@ interface Props {
 
 const Card: React.FC<Props> = ({ launch }): JSX.Element => {
   return (
+    <Link
+        to={`/company/${launch.name}`}
+        className="font-bold text-center text-veryDarkViolet md:text-left"
+      >
     <div className="border p-4 rounded-lg shadow hover:shadow-lg transition-shadow">
+      <LaunchImage 
+          imageUrl={launch.image} 
+          alt={`Launch error: oops`}
+          className="w-full h-full"
+        />
       <h2 className="text-xl font-semibold">{launch.name}</h2>
       <p className="text-gray-600">
         <span className="font-medium">Date:</span> {new Date(launch.window_start).toLocaleDateString()}
@@ -19,10 +30,11 @@ const Card: React.FC<Props> = ({ launch }): JSX.Element => {
       <p className="text-gray-600">
         <span className="font-medium">Rocket:</span> {launch.rocket.configuration.name}
       </p>
-      <p className="text-gray-600">
+      {/* <p className="text-gray-600">
         <span className="font-medium">Country:</span> {launch.pad.location.country_code}
-      </p>
+      </p> */}
     </div>
+    </Link>
   );
 };
 

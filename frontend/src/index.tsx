@@ -4,21 +4,24 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
-// import { fetchLaunches } from './api';
+import { RouterProvider } from 'react-router';
+import { router } from './Routes/Routes';
+import { fetchLaunches } from './api';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-// fetchLaunches()
-//   .then(data => console.log("Launches data:", data))
-//   .catch(error => console.error("Error:", error));
+fetchLaunches()
+  .then(data => console.log("Launches data:", data))
+  .catch(error => console.error("Error:", error));
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <RouterProvider router={router} />
+    {/* <BrowserRouter>
     <App />
-    </BrowserRouter>
+    </BrowserRouter> */}
   </React.StrictMode>
 );
 
