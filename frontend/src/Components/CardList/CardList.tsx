@@ -17,7 +17,7 @@ const CardList: React.FC<Props> = ({ launches }): JSX.Element => {
           );
         })
       ) : (
-        <p className="mb-3 mt-3 text-xl font-semibold text-center md:text-xl">
+        <p className="mb-3 mt-3 ml-56 text-xl font-semibold text-center md:text-xl">
           No results!
         </p>
       )}

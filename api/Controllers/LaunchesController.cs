@@ -26,16 +26,18 @@ namespace api.Controllers
         private readonly ILaunchesRepository _launchesRepo;
         private readonly ISpaceDevsService _spaceDevsService;
         private readonly ApplicationDBContext _context;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public LaunchesController(ApplicationDBContext context, ILaunchesRepository launchesRepo, ISpaceDevsService spaceDevsService)
+        public LaunchesController(ApplicationDBContext context, IHttpClientFactory httpClientFactory, ILaunchesRepository launchesRepo, ISpaceDevsService spaceDevsService)
         {
             _launchesRepo = launchesRepo;
             _spaceDevsService = spaceDevsService;
             _context = context;
+            _httpClientFactory = httpClientFactory;
         }
 
         [HttpGet("data")]
-        // [Authorize(Roles = "User, Admin")]
+        [Authorize(Roles = "User, Admin")]
         public async Task<ActionResult<SpaceDevsLaunches>> GetLaunches(CancellationToken ct)
         {
             try

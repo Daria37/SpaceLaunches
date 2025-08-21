@@ -2,9 +2,9 @@ export interface ISpaceLaunch {
   id: string;
   name: string;
   image: string;
-//   status: {
-//     name: string;
-//   };
+  status: {
+    name: string;
+  };
   window_start: string;
   launch_service_provider: {
     id: number;
@@ -33,7 +33,28 @@ export interface CompanyProfile {
     id: number;
     name: string;
     type: string;
-  }
+  };
+  pad: {
+    location: {
+      country_code: string;
+      map_image: string;
+    };
+  };
+}
+
+export interface SearchLaunches {
+  id: string;
+  window_start: string;
+  launch_service_provider: {
+    name: string;
+    type: string;
+  };
+  pad: {
+    location: {
+      country_code: string;
+      map_image: string;
+    };
+  };
 }
 
 export interface ISpaceLaunchesResponse {

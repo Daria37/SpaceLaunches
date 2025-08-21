@@ -4,6 +4,7 @@ import { CompanyProfile } from "../../spacelaunches";
 import { fetchLaunches } from "../../api";
 import { ISpaceLaunch } from "../../spacelaunches";
 import LaunchImage from "../../Components/Images/LaunchImage";
+import Spinner from "../../Components/Spinner/Spinner";
 
 const CompanyPage = () => {
   let { ticker } = useParams();
@@ -13,7 +14,8 @@ const CompanyPage = () => {
   useEffect(() => {
   const getLaunchData = async () => {
     try {
-      setLoading(true);
+      <Spinner />
+      // setLoading(true);
       const result = await fetchLaunches();
     //   console.log("Ticker from URL:", ticker);
       
@@ -34,7 +36,8 @@ const CompanyPage = () => {
   getLaunchData();
 }, [ticker]);
 
-  if (loading) return <div>Loading...</div>;
+  // if (loading) return <div>Loading...</div>;
+  if (loading) return <Spinner />
   if (!launch) return <div>Launch not found</div>;
 
   return (

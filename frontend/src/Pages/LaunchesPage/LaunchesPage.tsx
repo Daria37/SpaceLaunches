@@ -1,6 +1,7 @@
 import { fetchLaunches } from '../../api';
 import CardList from '../../Components/CardList/CardList';
 import Sidebar from '../../Components/Sidebar/Sidebar';
+import Spinner from '../../Components/Spinner/Spinner';
 import { ISpaceLaunch } from "../../spacelaunches";
 import React, { useState, useEffect, JSX } from "react";
 
@@ -12,7 +13,8 @@ const LaunchesPage = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        setLoading(true);
+        // setLoading(true);
+        <Spinner />
         const data = await fetchLaunches();
         setLaunches(data);
       } catch (err) {
@@ -26,7 +28,8 @@ const LaunchesPage = () => {
     loadData();
   }, []);
 
-  if (loading) return <div className="text-center py-8">Loading...</div>;
+  // if (loading) return <div className="text-center py-8">Loading...</div>;
+  if (loading) return <Spinner />;
   if (error) return <div className="text-center text-red-500 py-8">{error}</div>;
   return (
     <div className="w-full relative flex ct-docs-disable-sidebar-content overflow-x-hidden">

@@ -7,7 +7,7 @@ namespace api.Models
 {
     public class Launches
     {
-        public required string ID { get; set; }
+        public required int ID { get; set; }
         public required string Name { get; set; }
         public DateTime CreatedOnUTC { get; set; }
         public int? RocketID { get; set; }

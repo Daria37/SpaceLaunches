@@ -27,7 +27,7 @@ export const router = createBrowserRouter([
     //     element: (
     //       <ProtectedRoute>
     //         <SearchPage />
-    //       </ProtectedRoute>
+    //         </ProtectedRoute>
     //     ),
     //   },
     //   { path: "design-guide", element: <DesignGuide /> },

@@ -12,9 +12,9 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-fetchLaunches()
-  .then(data => console.log("Launches data:", data))
-  .catch(error => console.error("Error:", error));
+// fetchLaunches()
+//   .then(data => console.log("Launches data:", data))
+//   .catch(error => console.error("Error:", error));
 
 root.render(
   <React.StrictMode>
