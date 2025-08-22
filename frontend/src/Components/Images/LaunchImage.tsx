@@ -26,7 +26,7 @@ const LaunchImage: React.FC<LaunchImageProps> = ({
     <img 
       src={imageUrl} 
       alt={alt}
-      className={`object-cover w-72 h-72 ${className}`}
+      className={`object-cover w-60 h-60 ${className}`}
       onError={(e) => {
         // Запасной вариант если изображение не загрузится
         e.currentTarget.style.display = 'none';

@@ -3,7 +3,7 @@ export interface ISpaceLaunch {
   name: string;
   image: string;
   status: {
-    name: string;
+    abbrev: string;
   };
   window_start: string;
   launch_service_provider: {
