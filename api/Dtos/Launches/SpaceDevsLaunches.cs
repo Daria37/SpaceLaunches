@@ -11,7 +11,7 @@ namespace api.Dtos.Launches
     public class SpaceDevsLaunches
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

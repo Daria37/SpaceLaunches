@@ -27,7 +27,7 @@ namespace api.Dtos.Launches
     public class LaunchDto
     {
         [JsonPropertyName("id")]
-        public string Id { get; set; }
+        public int Id { get; set; }
         
         // [JsonPropertyName("name")]
         // public string Name { get; set; }

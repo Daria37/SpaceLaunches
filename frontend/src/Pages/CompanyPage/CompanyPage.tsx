@@ -51,6 +51,7 @@ const CompanyPage = () => {
         />
         <p><strong>Date:</strong> {new Date(launch.window_start).toLocaleDateString()}</p>
         <p><strong>Rocket:</strong> {launch.rocket.configuration.name}</p>
+        <p><strong>Status:</strong> {launch.status.abbrev}</p>
         <p><strong>Type:</strong> {launch.launch_service_provider.type}</p>
         <p><strong>Location:</strong> {launch.pad.location.country_code}</p>
         <p><strong>Mission:</strong> {launch.mission.description}</p>

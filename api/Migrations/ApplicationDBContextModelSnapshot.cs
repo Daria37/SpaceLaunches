@@ -258,8 +258,11 @@ namespace SpaceLaunch.Migrations
 
             modelBuilder.Entity("api.Models.Launches", b =>
                 {
-                    b.Property<string>("ID")
-                        .HasColumnType("text");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int?>("AgencyID")
                         .HasColumnType("integer");

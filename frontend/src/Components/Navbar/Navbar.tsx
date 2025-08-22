@@ -38,7 +38,7 @@ const Navbar = (props: Props) => {
             />
             
             {/* Результаты поиска */}
-            {isSearching && (
+            {/* {isSearching && (
                 <div className="container mx-auto p-6">
                 <h3 className="text-2xl font-bold mb-4">
                     {searchResults.length} result(s) found
@@ -53,7 +53,7 @@ const Navbar = (props: Props) => {
                     ))}
                 </div>
                 </div>
-            )}
+            )} */}
             </Link>
           </div>
           <div className="hidden font-bold lg:flex">
