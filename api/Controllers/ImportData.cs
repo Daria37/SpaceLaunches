@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
     [ApiController]
     [Route("api/import")]
+    [Authorize(Roles = "Admin")]
     public class ImportData : ControllerBase
     {
         private readonly ISpaceDevsService _spaceDevsService;

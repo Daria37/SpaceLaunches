@@ -27,10 +27,14 @@ namespace api.Dtos.Launches
     public class LaunchDto
     {
         [JsonPropertyName("id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
         
-        // [JsonPropertyName("name")]
-        // public string Name { get; set; }
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+        [JsonPropertyName("image")]
+        public string Image { get; set; }
+        [JsonPropertyName("status")]
+        public Status Status { get; set; }
         
         [JsonPropertyName("window_start")]
         public DateTime WindowStart { get; set; }
@@ -40,6 +44,9 @@ namespace api.Dtos.Launches
         
         [JsonPropertyName("rocket")]
         public RocketDto Rocket { get; set; }
+
+        [JsonPropertyName("mission")]
+        public Mission Mission { get; set; }
         
         [JsonPropertyName("pad")]
         public PadDto Pad { get; set; }
@@ -53,6 +60,17 @@ namespace api.Dtos.Launches
         public RocketConfigurationDto Configuration { get; set; }
         [JsonPropertyName("launch_service_provider")]
         public LaunchServiceProviderDto LaunchServiceProvider { get; set; }
+    }
+    public class Status
+    {
+        [JsonPropertyName("abbrev")]
+        public string abbrev { get; set; }
+    }
+
+    public class Mission
+    {
+        [JsonPropertyName("description")]
+        public string Description { get; set; }
     }
 
     public class LaunchServiceProviderDto
@@ -83,5 +101,8 @@ namespace api.Dtos.Launches
     {
         [JsonPropertyName("country_code")]
         public string CountryCode { get; set; }
+
+        [JsonPropertyName("map_image")]
+        public string MapImage { get; set; }
     }
 }

@@ -90,6 +90,28 @@ namespace api.Service
             .ToList();
         }
 
+        // public async Task<List<Launches>> GetLaunchesAsync()
+        // {
+        //     var response = await GetAllDataAsync();
+        //     return response.Results
+        //     .Where(launch => launch != null)
+        //     .Select(launch => new Launches
+        //     {
+        //         ID = launch.Id,
+        //         Name = launch.LaunchServiceProvider.Name ?? "None",
+        //         Image = launch.Image,
+        //         Status = launch.Status.abbrev,
+        //         CreatedOnUTC = launch.WindowStart,
+        //         CountryCode = launch.Pad?.Location.CountryCode ?? "None",
+        //         MapImage = launch.Pad.Location.MapImage,
+        //         Mission = launch.Mission.Description,
+        //         RocketID = launch.Rocket?.ID,
+        //         AgencyID = launch.LaunchServiceProvider?.Id
+        //     })
+        //     .DistinctBy(launch => launch.ID)
+        //     .ToList();
+        // }
+        
         public async Task<List<Launches>> GetLaunchesAsync()
         {
             var response = await GetAllDataAsync();
@@ -97,10 +119,14 @@ namespace api.Service
             .Where(launch => launch != null)
             .Select(launch => new Launches
             {
-                ID = launch.Id,
-                Name = launch.LaunchServiceProvider.Name ?? "None",
+                ID = launch.Id ?? "0",
+                Name = launch.LaunchServiceProvider?.Name ?? "None",
+                Image = launch.Image ?? "https://thespacedevs-prod.nyc3.digitaloceanspaces.com/media/images/sputnik_8k74ps_image_20210830185541.jpg",
+                Status = launch.Status?.abbrev ?? "None",
                 CreatedOnUTC = launch.WindowStart,
-                CountryCode = launch.Pad?.Location.CountryCode ?? "None",
+                CountryCode = launch.Pad?.Location?.CountryCode ?? "None",
+                MapImage = launch.Pad?.Location?.MapImage ?? "None",
+                Mission = launch.Mission?.Description ?? "None",
                 RocketID = launch.Rocket?.ID ?? 0,
                 AgencyID = launch.LaunchServiceProvider?.Id ?? 0
             })
@@ -108,22 +134,91 @@ namespace api.Service
             .ToList();
         }
 
+        // public async Task<List<Launches>> GetLaunchesAfter2020Async()
+        // {
+        //     var response = await GetData2020Async();
+        //     return response.Results
+        //     .Where(launch => launch != null)
+        //     .Select(launch => new Launches
+        //     {
+        //         ID = launch.Id ?? "0",
+        //         Name = launch.LaunchServiceProvider.Name ?? "None",
+        //         Image = launch.Image ?? "None",
+        //         Status = launch.Status.abbrev ?? "None",
+        //         CreatedOnUTC = launch.WindowStart,
+        //         CountryCode = launch.Pad?.Location.CountryCode ?? "None",
+        //         MapImage = launch.Pad.Location.MapImage ?? "None",
+        //         Mission = launch.Mission.Description ?? "None",
+        //         RocketID = launch.Rocket?.ID ?? 0,
+        //         AgencyID = launch.LaunchServiceProvider?.Id ?? 0
+        //     })
+        //     .DistinctBy(launch => launch.ID)
+        //     .ToList();
+        // }
+
         public async Task<List<Launches>> GetLaunchesAfter2020Async()
         {
-            var response = await GetData2020Async();
-            return response.Results
-            .Where(launch => launch != null)
-            .Select(launch => new Launches
+            try
             {
-                ID = launch.Id,
-                Name = launch.LaunchServiceProvider.Name ?? "None",
-                CreatedOnUTC = launch.WindowStart,
-                CountryCode = launch.Pad?.Location.CountryCode ?? "None",
-                RocketID = launch.Rocket?.ID ?? 0,
-                AgencyID = launch.LaunchServiceProvider?.Id ?? 0
-            })
-            .DistinctBy(launch => launch.ID)
-            .ToList();
+                Console.WriteLine("Getting launches after 2020...");
+                var response = await GetData2020Async();
+
+                if (response == null)
+                {
+                    Console.WriteLine("Response is null");
+                    return new List<Launches>();
+                }
+
+                if (response.Results == null)
+                {
+                    Console.WriteLine("Response.Results is null");
+                    return new List<Launches>();
+                }
+
+                Console.WriteLine($"Found {response.Results.Count} launches");
+
+                var launches = new List<Launches>();
+                foreach (var launch in response.Results)
+                {
+                    if (launch == null)
+                    {
+                        Console.WriteLine("Skipping null launch");
+                        continue;
+                    }
+
+                    try
+                    {
+                        var launchEntity = new Launches
+                        {
+                            ID = launch.Id ?? "0",
+                            Name = launch.LaunchServiceProvider?.Name ?? "None",
+                            Image = launch.Image ?? "None",
+                            Status = launch.Status?.abbrev ?? "None",
+                            CreatedOnUTC = launch.WindowStart,
+                            CountryCode = launch.Pad?.Location?.CountryCode ?? "None",
+                            MapImage = launch.Pad?.Location?.MapImage ?? "None",
+                            Mission = launch.Mission?.Description ?? "None",
+                            RocketID = launch.Rocket?.ID ?? 0,
+                            AgencyID = launch.LaunchServiceProvider?.Id ?? 0
+                        };
+
+                        launches.Add(launchEntity);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error processing launch {launch.Id}: {ex.Message}");
+                    }
+                }
+
+                Console.WriteLine($"Successfully processed {launches.Count} launches");
+                return launches.DistinctBy(l => l.ID).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in GetLaunchesAfter2020Async: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                return new List<Launches>();
+            }
         }
 
         public async Task<List<Rocket>> GetRocketAfter2020Async()
@@ -223,11 +318,15 @@ namespace api.Service
                         _context.Launches.Add(new Launches
                         {
                             ID = launchDto.ID,
-                            Name = launchDto.Name,
+                            Name = launchDto.Name ?? "None",
+                            Image = launchDto.Image,
+                            Status = launchDto.Status,
                             CreatedOnUTC = launchDto.CreatedOnUTC,
-                            RocketID = launchDto.RocketID ?? 0,
-                            AgencyID = launchDto.AgencyID ?? 0,
-                            CountryCode = launchDto.CountryCode
+                            CountryCode = launchDto.CountryCode ?? "None",
+                            MapImage = launchDto.MapImage,
+                            Mission = launchDto.Mission,
+                            RocketID = launchDto.Rocket?.ID,
+                            AgencyID = launchDto.AgencyID ?? 0
                         });
                     }
                 }
@@ -242,11 +341,15 @@ namespace api.Service
                         _context.Launches.Add(new Launches
                         {
                             ID = launchDto.ID,
-                            Name = launchDto.Name,
+                            Name = launchDto.Name ?? "None",
+                            Image = launchDto.Image,
+                            Status = launchDto.Status,
                             CreatedOnUTC = launchDto.CreatedOnUTC,
-                            RocketID = launchDto.RocketID ?? 0,
-                            AgencyID = launchDto.AgencyID ?? 0,
-                            CountryCode = launchDto.CountryCode
+                            CountryCode = launchDto.CountryCode ?? "None",
+                            MapImage = launchDto.MapImage,
+                            Mission = launchDto.Mission,
+                            RocketID = launchDto.Rocket?.ID,
+                            AgencyID = launchDto.AgencyID ?? 0
                         });
                     }
                 }
@@ -296,159 +399,3 @@ namespace api.Service
         }
     }
 }
-
-// using System;
-// using System.Collections.Generic;
-// using System.Data;
-// using System.Linq;
-// using System.Net;
-// using System.Threading.Tasks;
-// using api.Interfaces;
-// using api.Models;
-// using api.Mappers;
-// using Microsoft.Identity.Client;
-// using api.Dtos.Launches;
-// using System.Net.Http;
-// using System.Text.Json;
-// using Newtonsoft.Json;
-// using AutoMapper;
-// using System.Text.Json.Serialization;
-// using api.Data;
-// using Microsoft.EntityFrameworkCore;
-
-// public class SpaceDevsService : ISpaceDevsService
-// {
-//     private readonly HttpClient _httpClient;
-//     private readonly IConfiguration _configuration;
-//     private readonly ApplicationDBContext _dbContext;
-//     private readonly ILogger<SpaceDevsService> _logger;
-
-//     public SpaceDevsService(
-//         HttpClient httpClient,
-//         IConfiguration configuration,
-//         ApplicationDBContext dbContext,
-//         ILogger<SpaceDevsService> logger)
-//     {
-//         _httpClient = httpClient;
-//         _configuration = configuration;
-//         _dbContext = dbContext;
-//         _logger = logger;
-//     }
-
-//     public async Task<SpaceDevsResponce> GetAllDataAsync()
-//     {
-//          try
-//             {
-//                 var response = await _httpClient.GetAsync("https://ll.thespacedevs.com/2.2.0/launch/?format=json&limit=10");
-
-//                 var content = await response.Content.ReadAsStringAsync();
-//                 var apiResponse = System.Text.Json.JsonSerializer.Deserialize<SpaceDevsResponce>(content, new JsonSerializerOptions
-//                 {
-//                     PropertyNameCaseInsensitive = true
-//                 });
-//                 return apiResponse;
-//             }
-//             catch (Exception e)
-//             {
-//                 Console.Write(e);
-//                 return new SpaceDevsResponce { Results = new List<LaunchDto>() };
-//             }
-//         }
-
-//     public async Task<bool> SaveToDatabaseAsync(bool forceUpdate = false)
-//     {
-//         try
-//         {
-//             if (forceUpdate)
-//             {
-//                 // Очистка только если явно запрошено
-//                 _dbContext.Launches.RemoveRange(_dbContext.Launches);
-//                 _dbContext.Rocket.RemoveRange(_dbContext.Rocket);
-//                 _dbContext.Agency.RemoveRange(_dbContext.Agency);
-//                 await _dbContext.SaveChangesAsync();
-//             }
-
-//             var response = await GetAllDataAsync();
-            
-//             // Словари для отслеживания существующих записей
-//             var existingRockets = await _dbContext.Rocket.ToDictionaryAsync(r => r.ID);
-//             var existingAgencies = await _dbContext.Agency.ToDictionaryAsync(a => a.ID);
-//             var existingLaunches = await _dbContext.Launches.ToDictionaryAsync(l => l.ID);
-
-//             foreach (var launchDto in response.Results)
-//             {
-//                 try 
-//                 {
-//                     // Обработка Rocket
-//                     if (launchDto.Rocket != null)
-//                     {
-//                         if (!existingRockets.TryGetValue(launchDto.Rocket.ID, out var rocket))
-//                         {
-//                             rocket = new Rocket
-//                             {
-//                                 ID = launchDto.Rocket.ID,
-//                                 Name = launchDto.Rocket.Configuration?.Name ?? "None",
-//                                 AgencyID = launchDto.LaunchServiceProvider?.Id ?? 0
-//                             };
-//                             _dbContext.Rocket.Add(rocket);
-//                             existingRockets.Add(rocket.ID, rocket);
-//                         }
-//                     }
-
-//                     // Обработка Agency
-//                     if (launchDto.LaunchServiceProvider != null)
-//                     {
-//                         if (!existingAgencies.TryGetValue(launchDto.LaunchServiceProvider.Id, out var agency))
-//                         {
-//                             agency = new Agency
-//                             {
-//                                 ID = launchDto.LaunchServiceProvider.Id,
-//                                 Name = launchDto.LaunchServiceProvider.Name,
-//                                 Type = launchDto.LaunchServiceProvider.Type,
-//                                 CountryCode = launchDto.LaunchServiceProvider.Pad.Location.CountryCode
-//                             };
-//                             _dbContext.Agency.Add(agency);
-//                             existingAgencies.Add(agency.ID, agency);
-//                         }
-//                     }
-
-//                     // Обработка Launch
-//                     if (!existingLaunches.TryGetValue(launchDto.Id, out var launch))
-//                     {
-//                         launch = new Launches
-//                         {
-//                             ID = launchDto.Id,
-//                             Name = launchDto.LaunchServiceProvider.Name,
-//                             CreatedOnUTC = launchDto.WindowStart,
-//                             RocketID = launchDto.Rocket?.ID,
-//                             AgencyID = launchDto.LaunchServiceProvider?.Id,
-//                             CountryCode = launchDto.LaunchServiceProvider.Pad.Location.CountryCode
-//                         };
-//                         _dbContext.Launches.Add(launch);
-//                     }
-//                     else
-//                     {
-//                         // Обновление существующего запуска
-//                         launch.Name = launchDto.LaunchServiceProvider.Name;
-//                         launch.CreatedOnUTC = launchDto.WindowStart;
-//                         launch.RocketID = launchDto.Rocket?.ID;
-//                         launch.AgencyID = launchDto.LaunchServiceProvider?.Id;
-//                         launch.CountryCode = launchDto.LaunchServiceProvider.Pad.Location.CountryCode;
-//                     }
-//                 }
-//                 catch (Exception ex)
-//                 {
-//                     Console.Write($"Error processing launch {launchDto.Id}");
-//                 }
-//             }
-
-//             await _dbContext.SaveChangesAsync();
-//             return true;
-//         }
-//         catch (Exception ex)
-//         {
-//             Console.Write(ex);
-//             return false;
-//         }
-//     }
-// }

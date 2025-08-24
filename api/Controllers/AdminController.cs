@@ -44,7 +44,7 @@ namespace api.Controllers
 
             return Ok(users);
         }
-        
+
         [HttpPost("assign-role")]
         public async Task<IActionResult> AssignRole([FromBody] AssignRoleDto model)
         {
@@ -55,8 +55,8 @@ namespace api.Controllers
                 return BadRequest("Role does not exist");
 
             var result = await _userManager.AddToRoleAsync(user, model.RoleName);
-            
-            return result.Succeeded 
+
+            return result.Succeeded
                 ? Ok($"Role '{model.RoleName}' assigned to user {user.UserName}")
                 : BadRequest(result.Errors);
         }

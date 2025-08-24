@@ -31,18 +31,18 @@ namespace api.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAll()
-        {
-            var agency = await _agencyRepo.GetAllAsync();
-            var agencyDto = agency.Select(s => s.ToAgencyDto());
+        // [HttpGet]
+        // [Authorize(Roles = "Admin")]
+        // public async Task<IActionResult> GetAll()
+        // {
+        //     var agency = await _agencyRepo.GetAllAsync();
+        //     var agencyDto = agency.Select(s => s.ToAgencyDto());
 
-            return Ok(agencyDto);
-        }
+        //     return Ok(agencyDto);
+        // }
 
         [HttpGet("data")]
-        // [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, User")]
         public async Task<ActionResult<SpaceDevsAgency>> GetRocket(CancellationToken ct)
         {
             try
@@ -57,46 +57,46 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("search_filter")]
-        [Authorize(Roles = "User,Admin")]
-        public async Task<ActionResult<IEnumerable<Agency>>> SearchAgency(
-            [FromQuery] string? searchTerm,
-            [FromQuery] string? countryCode,
-            [FromServices] IDistributedCache cache)
-        {
-            // Формируем ключ кэша на основе всех параметров фильтрации
-            var cacheKey = $"launches_search_{searchTerm}_{countryCode}";
+        // [HttpGet("search_filter")]
+        // [Authorize(Roles = "User,Admin")]
+        // public async Task<ActionResult<IEnumerable<Agency>>> SearchAgency(
+        //     [FromQuery] string? searchTerm,
+        //     [FromQuery] string? countryCode,
+        //     [FromServices] IDistributedCache cache)
+        // {
+        //     // Формируем ключ кэша на основе всех параметров фильтрации
+        //     var cacheKey = $"launches_search_{searchTerm}_{countryCode}";
 
-            // Проверяем кэш
-            var cachedData = await cache.GetStringAsync(cacheKey);
-            if (cachedData != null)
-            {
-                return Ok(JsonSerializer.Deserialize<List<Agency>>(cachedData));
-            }
+        //     // Проверяем кэш
+        //     var cachedData = await cache.GetStringAsync(cacheKey);
+        //     if (cachedData != null)
+        //     {
+        //         return Ok(JsonSerializer.Deserialize<List<Agency>>(cachedData));
+        //     }
 
-            // Запрос к БД с учетом фильтров
-            var query = _context.Agency.AsQueryable();
+        //     // Запрос к БД с учетом фильтров
+        //     var query = _context.Agency.AsQueryable();
 
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                query = query.Where(l => l.Name.Contains(searchTerm));
-            }
+        //     if (!string.IsNullOrEmpty(searchTerm))
+        //     {
+        //         query = query.Where(l => l.Name.Contains(searchTerm));
+        //     }
 
-            if (!string.IsNullOrEmpty(countryCode))
-            {
-                query = query.Where(l => l.CountryCode == countryCode);
-            }
+        //     if (!string.IsNullOrEmpty(countryCode))
+        //     {
+        //         query = query.Where(l => l.CountryCode == countryCode);
+        //     }
 
-            var agency = await query.ToListAsync();
+        //     var agency = await query.ToListAsync();
 
-            // Сохраняем в кэш
-            await cache.SetStringAsync(
-                cacheKey,
-                JsonSerializer.Serialize(agency),
-                new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) }
-            );
+        //     // Сохраняем в кэш
+        //     await cache.SetStringAsync(
+        //         cacheKey,
+        //         JsonSerializer.Serialize(agency),
+        //         new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) }
+        //     );
 
-            return Ok(agency);
-        }
+        //     return Ok(agency);
+        // }
     }
 }

@@ -68,15 +68,14 @@ namespace api.Controllers
             }
         }
 
-        [HttpGet("search_filter")]
+        [HttpGet("search")]
         [Authorize(Roles = "User,Admin")]
         public async Task<ActionResult<IEnumerable<Launches>>> SearchLaunches(
             [FromQuery] string? searchTerm,
-            [FromQuery] string? countryCode,
             [FromServices] IDistributedCache cache)
         {
             // Формируем ключ кэша на основе всех параметров фильтрации
-            var cacheKey = $"launches_search_{searchTerm}_{countryCode}";
+            var cacheKey = $"launches_search_{searchTerm}";
 
             // Проверяем кэш
             var cachedData = await cache.GetStringAsync(cacheKey);
@@ -93,9 +92,40 @@ namespace api.Controllers
                 query = query.Where(l => l.Name.Contains(searchTerm));
             }
 
-            if (!string.IsNullOrEmpty(countryCode))
+            var launches = await query.ToListAsync();
+
+            // Сохраняем в кэш
+            await cache.SetStringAsync(
+                cacheKey,
+                JsonSerializer.Serialize(launches),
+                new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) }
+            );
+
+            return Ok(launches);
+        }
+
+        [HttpGet("filter")]
+        [Authorize(Roles = "User,Admin")]
+        public async Task<ActionResult<IEnumerable<Launches>>> FilterLaunches(
+            [FromQuery] string? StatusCode,
+            [FromServices] IDistributedCache cache)
+        {
+            // Формируем ключ кэша на основе всех параметров фильтрации
+            var cacheKey = $"launches_search_{StatusCode}";
+
+            // Проверяем кэш
+            var cachedData = await cache.GetStringAsync(cacheKey);
+            if (cachedData != null)
             {
-                query = query.Where(l => l.CountryCode == countryCode);
+                return Ok(JsonSerializer.Deserialize<List<Launches>>(cachedData));
+            }
+
+            // Запрос к БД с учетом фильтров
+            var query = _context.Launches.AsQueryable();
+
+            if (!string.IsNullOrEmpty(StatusCode))
+            {
+                query = query.Where(l => l.Status == StatusCode);
             }
 
             var launches = await query.ToListAsync();

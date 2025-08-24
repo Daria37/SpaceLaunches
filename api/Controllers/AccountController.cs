@@ -83,5 +83,40 @@ namespace api.Controllers
 
             return BadRequest(createdUser.Errors);
         }
+
+        // Временный эндпоинт для назначения роли (потом удалите)
+        [HttpPost("make-me-admin")]
+        public async Task<IActionResult> MakeMeAdmin()
+        {
+            var user = await _userManager.FindByEmailAsync("admin@example.com");
+            if (user == null) return BadRequest("User not found");
+
+            // Создаем роль, если её нет
+            if (!await _roleManager.RoleExistsAsync("Admin"))
+                await _roleManager.CreateAsync(new IdentityRole("Admin"));
+
+            // Назначаем роль
+            var result = await _userManager.AddToRoleAsync(user, "Admin");
+            return result.Succeeded
+                ? Ok("Now you are admin!")
+                : BadRequest(result.Errors);
+        }
+
+        [HttpPost("fix-roles")]
+        // [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> FixRoles()
+        {
+            var user = await _userManager.FindByNameAsync("admin");
+            if (user == null) return BadRequest("User not found");
+
+            // Удаляем все роли
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            
+            // Добавляем только Admin
+            await _userManager.AddToRoleAsync(user, "Admin");
+            
+            return Ok("Roles fixed. User now has only Admin role");
+        }
     }
 }
