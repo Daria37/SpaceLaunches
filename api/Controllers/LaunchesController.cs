@@ -105,29 +105,46 @@ namespace api.Controllers
         {
             if (string.IsNullOrEmpty(searchTerm))
             {
-                return Ok(new List<Launches>());
+                var cacheKey = "launches_search_all";
+                
+                var cachedData = await cache.GetStringAsync(cacheKey);
+                if (cachedData != null)
+                {
+                    return Ok(JsonSerializer.Deserialize<List<Launches>>(cachedData));
+                }
+
+                var allLaunches = await _context.Launches.ToListAsync();
+                
+                await cache.SetStringAsync(
+                    cacheKey,
+                    JsonSerializer.Serialize(allLaunches),
+                    new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) }
+                );
+
+                return Ok(allLaunches);
             }
 
-            var cacheKey = $"launches_search_{searchTerm.ToLower()}";
+            var searchCacheKey = $"launches_search_{searchTerm.ToLower()}";
 
-            var cachedData = await cache.GetStringAsync(cacheKey);
-            if (cachedData != null)
+            var searchCachedData = await cache.GetStringAsync(searchCacheKey);
+            if (searchCachedData != null)
             {
-                return Ok(JsonSerializer.Deserialize<List<Launches>>(cachedData));
+                return Ok(JsonSerializer.Deserialize<List<Launches>>(searchCachedData));
             }
-
-            var query = _context.Launches.AsQueryable();
 
             var searchTermLower = searchTerm.ToLower();
-            query = query.Where(l => 
-                l.Name.ToLower().Contains(searchTermLower) ||
-                (l.RocketName != null && l.RocketName.ToLower().Contains(searchTermLower))
-            );
+            var query = _context.Launches
+                .Where(l => 
+                    l.Name.ToLower().Contains(searchTermLower) ||
+                    (l.RocketName != null && l.RocketName.ToLower().Contains(searchTermLower)) ||
+                    (l.CountryCode != null && l.CountryCode.ToLower().Contains(searchTermLower)) ||
+                    (l.Mission != null && l.Mission.ToLower().Contains(searchTermLower))
+                );
 
             var launches = await query.ToListAsync();
 
             await cache.SetStringAsync(
-                cacheKey,
+                searchCacheKey,
                 JsonSerializer.Serialize(launches),
                 new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) }
             );
