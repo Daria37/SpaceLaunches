@@ -5,13 +5,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Launches;
-using api.Helpers;
 using api.Interfaces;
-using api.Mappers;
 using api.Models;
-using api.Service;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
@@ -23,22 +19,18 @@ namespace api.Controllers
     [ApiController]
     public class LaunchesController : ControllerBase
     {
-        private readonly ILaunchesRepository _launchesRepo;
         private readonly ISpaceDevsService _spaceDevsService;
         private readonly ApplicationDBContext _context;
-        private readonly IHttpClientFactory _httpClientFactory;
 
-        public LaunchesController(ApplicationDBContext context, IHttpClientFactory httpClientFactory, ILaunchesRepository launchesRepo, ISpaceDevsService spaceDevsService)
+        public LaunchesController(ApplicationDBContext context, ISpaceDevsService spaceDevsService)
         {
-            _launchesRepo = launchesRepo;
             _spaceDevsService = spaceDevsService;
             _context = context;
-            _httpClientFactory = httpClientFactory;
         }
 
         [HttpGet("data")]
-        [Authorize(Roles = "User, Admin")]
-        public async Task<ActionResult<SpaceDevsLaunches>> GetLaunches(CancellationToken ct)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<SpaceDevsLaunches>> GetLaunches()
         {
             try
             {
@@ -52,8 +44,30 @@ namespace api.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        [Authorize(Roles = "User, Admin")]
+        public async Task<ActionResult<Launches>> GetLaunchById(string id, CancellationToken ct)
+        {
+            try
+            {
+                
+                var launch = await _spaceDevsService.GetLaunchByIdAsync(id);
+                
+                if (launch == null)
+                {
+                    return NotFound($"Launch with ID {id} not found");
+                }
+                
+                return Ok(launch);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         [HttpGet("after-2020")]
-        [Authorize(Roles = "Admin")] // Доступно для User и Admin
+        [Authorize(Roles = "Admin, User")]
         public async Task<ActionResult<SpaceDevsLaunches>> GetLaunchesAfter2020()
         {
             try
@@ -68,33 +82,50 @@ namespace api.Controllers
             }
         }
 
+        [HttpGet("spacex")]
+        [Authorize(Roles = "Admin, User")]
+        public async Task<ActionResult<SpaceDevsLaunches>> GetLaunchesSpaceX()
+        {
+            try
+            {
+                var launches = await _spaceDevsService.GetLaunchesSpaceX();
+
+                return Ok(launches);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         [HttpGet("search")]
-        [Authorize(Roles = "User,Admin")]
         public async Task<ActionResult<IEnumerable<Launches>>> SearchLaunches(
             [FromQuery] string? searchTerm,
             [FromServices] IDistributedCache cache)
         {
-            // Формируем ключ кэша на основе всех параметров фильтрации
-            var cacheKey = $"launches_search_{searchTerm}";
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return Ok(new List<Launches>());
+            }
 
-            // Проверяем кэш
+            var cacheKey = $"launches_search_{searchTerm.ToLower()}";
+
             var cachedData = await cache.GetStringAsync(cacheKey);
             if (cachedData != null)
             {
                 return Ok(JsonSerializer.Deserialize<List<Launches>>(cachedData));
             }
 
-            // Запрос к БД с учетом фильтров
             var query = _context.Launches.AsQueryable();
 
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                query = query.Where(l => l.Name.Contains(searchTerm));
-            }
+            var searchTermLower = searchTerm.ToLower();
+            query = query.Where(l => 
+                l.Name.ToLower().Contains(searchTermLower) ||
+                (l.RocketName != null && l.RocketName.ToLower().Contains(searchTermLower))
+            );
 
             var launches = await query.ToListAsync();
 
-            // Сохраняем в кэш
             await cache.SetStringAsync(
                 cacheKey,
                 JsonSerializer.Serialize(launches),
@@ -110,17 +141,14 @@ namespace api.Controllers
             [FromQuery] string? StatusCode,
             [FromServices] IDistributedCache cache)
         {
-            // Формируем ключ кэша на основе всех параметров фильтрации
             var cacheKey = $"launches_search_{StatusCode}";
 
-            // Проверяем кэш
             var cachedData = await cache.GetStringAsync(cacheKey);
             if (cachedData != null)
             {
                 return Ok(JsonSerializer.Deserialize<List<Launches>>(cachedData));
             }
 
-            // Запрос к БД с учетом фильтров
             var query = _context.Launches.AsQueryable();
 
             if (!string.IsNullOrEmpty(StatusCode))
@@ -130,7 +158,6 @@ namespace api.Controllers
 
             var launches = await query.ToListAsync();
 
-            // Сохраняем в кэш
             await cache.SetStringAsync(
                 cacheKey,
                 JsonSerializer.Serialize(launches),

@@ -2,30 +2,12 @@ export interface ISpaceLaunch {
   id: string;
   name: string;
   image: string;
-  status: {
-    abbrev: string;
-  };
-  window_start: string;
-  launch_service_provider: {
-    id: number;
-    name: string;
-    type: string;
-  };
-  rocket: {
-    id: number;
-    configuration: {
-      name: string;
-    };
-  };
-  mission: {
-    description: string;
-  }
-  pad: {
-    location: {
-      country_code: string;
-      map_image: string;
-    };
-  };
+  status: string;
+  createdOnUTC: string;
+  mapImage: string;
+  mission: string;
+  rocketName: string;
+  countryCode: string;
 }
 
 export interface CompanyProfile {

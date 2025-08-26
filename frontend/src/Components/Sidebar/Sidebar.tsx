@@ -1,15 +1,10 @@
 import React from "react";
 import { Link } from "react-router";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
-
-// interface Props {
-//   yearlyData?: Array<{ year: string; launches: number }>;
-//   countryData?: Array<{ country: string; launches: number; color: string }>;
-// }
+import { getSpaceXLaunches } from "../../api";
 
 interface Props {}
 
-// Моковые данные для примеров (замените на реальные данные из API)
 const yearlyData = [
   { year: "1957-1970", launches: 1247 },
   { year: "1971-1985", launches: 1596 },
@@ -26,14 +21,14 @@ const countryData = [
   { country: "Other", launches: 954, color: "#6366F1" }
 ];
 
-// const Sidebar: React.FC<Props> = ({ yearlyData = [], countryData = [] }) => {
 const Sidebar = (props: Props) => {
   const hasYearlyData = yearlyData && Array.isArray(yearlyData) && yearlyData.length > 0;
   const hasCountryData = countryData && Array.isArray(countryData) && countryData.length > 0;
+  const data = getSpaceXLaunches();
 
-  if(!hasYearlyData || !hasCountryData) {
+  if(!hasYearlyData || !hasCountryData || !data) {
     return (
-      <nav className="w-1/4 block py-4 px-6 top-0 bottom-0 w-64 bg-white shadow-xl left-0 absolute flex-row flex-nowrap md:z-10 z-9999 transition-all duration-300 ease-in-out transform md:translate-x-0 -translate-x-full">
+      <nav className="w-1/4 mr-52 block py-4 px-6 top-0 bottom-0 w-64 bg-white shadow-xl left-0 absolute flex-row flex-nowrap md:z-10 z-9999 transition-all duration-300 ease-in-out transform md:translate-x-0 -translate-x-full">
         <div className="flex-col min-h-full px-0 flex flex-wrap items-center justify-between w-full mx-auto overflow-y-auto overflow-x-hidden">
           <div className="flex bg-white flex-col items-stretch opacity-100 relative mt-4 overflow-y-auto overflow-x-hidden h-auto z-40 items-center flex-1 rounded w-full">
             <div className="md:flex-col md:min-w-full flex flex-col list-none">
@@ -55,13 +50,11 @@ const Sidebar = (props: Props) => {
           <div className="flex-col min-h-full px-0 flex flex-wrap items-center justify-between w-full mx-auto overflow-y-auto overflow-x-hidden">
             <div className="flex bg-white flex-col items-stretch opacity-100 relative mt-4 overflow-y-auto overflow-x-hidden h-auto z-40 items-center flex-1 rounded w-full">
               <div className="md:flex-col md:min-w-full flex flex-col list-none">
-          {/* Заголовок */}
           <div className="mb-8">
             <h2 className="text-xl font-bold text-gray-800 mb-2">Launch Analytics</h2>
             <p className="text-gray-600 text-sm">Real-time launch statistics</p>
           </div>
 
-          {/* График по годам */}
           <div className="mb-8">
             <h3 className="text-lg font-semibold text-gray-700 mb-4">Launches by Year</h3>
             <div className="h-64">
@@ -77,7 +70,6 @@ const Sidebar = (props: Props) => {
             </div>
           </div>
 
-          {/* График по странам */}
           <div className="mb-8">
             <h3 className="text-lg font-semibold text-gray-700 mb-4">Launches by Country</h3>
             <div className="h-64">
@@ -101,7 +93,6 @@ const Sidebar = (props: Props) => {
             </div>
           </div>
 
-          {/* Статистика */}
           <div className="bg-gray-50 rounded-lg p-4">
             <h3 className="text-md font-semibold text-gray-700 mb-3">Quick Stats</h3>
             <div className="space-y-2">

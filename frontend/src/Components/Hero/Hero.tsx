@@ -14,7 +14,7 @@ const Hero = (props: Props) => {
             Space Launches analytics
           </h1>
           <p className="text-2xl text-center text-gray-400 lg:max-w-md lg:text-left">
-            Watch space launches in live
+            Watch space launches data
           </p>
           <div className="mx-auto lg:mx-0">
             <Link

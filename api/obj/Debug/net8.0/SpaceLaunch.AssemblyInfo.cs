@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SpaceLaunch")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+04923dbd0240287cdcef5275c928268bc4bb64a2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ecc7a096e27351f361c239a18fe80c68d596fdc")]
 [assembly: System.Reflection.AssemblyProductAttribute("SpaceLaunch")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SpaceLaunch")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

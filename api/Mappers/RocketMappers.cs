@@ -18,14 +18,5 @@ namespace api.Mappers
                 AgencyID = rocketModel.AgencyID
             };
         }
-        public static Rocket ToRocketFromCreateDTO(this CreateRocketRequestDto rocketDto)
-        {
-            return new Rocket
-            {
-                ID = rocketDto.ID,
-                Name = rocketDto.Name,
-                AgencyID = rocketDto.AgencyID
-            };
-        }
     }
 }

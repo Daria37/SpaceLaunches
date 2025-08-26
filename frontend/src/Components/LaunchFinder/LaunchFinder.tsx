@@ -22,7 +22,7 @@ const LaunchFinder = ({ onFilterChange }: Props) => {
 
   return (
     <div className="m-4">
-      <div className="inline-flex rounded-md shadow-sm gap-2 ml-40" role="group">
+      <div className="inline-flex rounded-md shadow-sm gap-2 ml-80" role="group">
         <button
           type="button"
           className={getButtonClass("all")}

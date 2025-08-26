@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using api.Dtos.Agency;
 using api.Dtos.Launches;
-using api.Dtos.Rocket;
 using api.Models;
 
 namespace api.Mappers
@@ -17,9 +15,8 @@ namespace api.Mappers
             {
                 ID = launchesModel.ID,
                 Name = launchesModel.Name,
-                CreatedOnUTC = launchesModel.CreatedOnUTC,
-                RocketID = launchesModel.RocketID,
-                AgencyID = launchesModel.AgencyID,
+                CreatedOnUTC = (DateTime)launchesModel.CreatedOnUTC,
+                RocketName = launchesModel.RocketName,
                 CountryCode = launchesModel.CountryCode
             };
         }

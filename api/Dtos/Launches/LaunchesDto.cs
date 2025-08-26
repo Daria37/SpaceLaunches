@@ -12,9 +12,8 @@ namespace api.Dtos.Launches
         public string Image { get; set; }
         public string Status { get; set; }
         public DateTime CreatedOnUTC { get; set; }
-        public int? RocketID { get; set; }
+        public string RocketName { get; set; }
         public string Mission { get; set; }
-        public int? AgencyID { get; set; }
         public string? CountryCode { get; set; }
     }
 }

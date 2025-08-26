@@ -6,6 +6,7 @@ import LaunchesPage from "../Pages/LaunchesPage/LaunchesPage";
 import LoginPage from "../Pages/LoginPage/LoginPage";
 import RegisterPage from "../Pages/RegisterPage/RegisterPage";
 import ProtectedRoute from "./ProtectedRoute";
+import AdminPanel from "../Components/Admin/AdminPanel";
 
 export const router = createBrowserRouter([
   {
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
       { path: "", element: <HomePage /> },
       { path: "login", element: <LoginPage /> },
       { path: "register", element: <RegisterPage /> },
+      { path: "admin", element: <AdminPanel /> },
       { path: "launches", 
         element: (
         <ProtectedRoute>
@@ -22,7 +24,7 @@ export const router = createBrowserRouter([
         </ProtectedRoute> 
         ),
       },
-      { path: "company/:ticker", element: <ProtectedRoute><CompanyPage /></ProtectedRoute> }
+      { path: "launches/:id", element: <ProtectedRoute><CompanyPage /></ProtectedRoute> }
     ],
   },
 ]);

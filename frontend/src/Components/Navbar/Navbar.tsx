@@ -36,24 +36,6 @@ const Navbar = (props: Props) => {
                 onSearchSubmit={handleSearchSubmit}
                 onClearSearch={handleClearSearch}
             />
-            
-            {/* Результаты поиска */}
-            {/* {isSearching && (
-                <div className="container mx-auto p-6">
-                <h3 className="text-2xl font-bold mb-4">
-                    {searchResults.length} result(s) found
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {searchResults.map(launch => (
-                    <div key={launch.id} className="bg-white p-4 rounded-lg shadow">
-                        <h4 className="font-semibold">{launch.name}</h4>
-                        <p>{launch.rocket.configuration.name}</p>
-                        <p>{new Date(launch.window_start).toLocaleDateString()}</p>
-                    </div>
-                    ))}
-                </div>
-                </div>
-            )} */}
             </Link>
           </div>
           <div className="hidden font-bold lg:flex">

@@ -1,10 +1,11 @@
-import { fetchLaunches } from '../../api';
+import { useParams } from 'react-router-dom';
 import CardList from '../../Components/CardList/CardList';
 import LaunchFinder from '../../Components/LaunchFinder/LaunchFinder';
 import Sidebar from '../../Components/Sidebar/Sidebar';
 import Spinner from '../../Components/Spinner/Spinner';
 import { ISpaceLaunch } from "../../spacelaunches";
 import React, { useState, useEffect } from "react";
+import { getAllLaunchesFromBackend, getSpaceXLaunches } from '../../api';
 
 const LaunchesPage = () => {
   const [launches, setLaunches] = useState<ISpaceLaunch[]>([]);
@@ -13,15 +14,34 @@ const LaunchesPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentFilter, setCurrentFilter] = useState<"all" | "success" | "failure">("all");
 
+  const isAdmin = (): boolean => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        return user.roles && user.roles.includes("Admin");
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
+  };
+
   useEffect(() => {
     const loadData = async () => {
       try {
-        const data = await fetchLaunches();
+        let data: ISpaceLaunch[];
+        
+        if (isAdmin()) {
+          data = await getAllLaunchesFromBackend();
+        } else {
+          data = await getSpaceXLaunches();
+        }
+        
         setLaunches(data);
         setFilteredLaunches(data);
-      } catch (err) {
-        setError("Failed to load launches");
-        console.error(err);
+      } catch (err: any) {
+        setError("Failed to load launches: " + (err.message || "Unknown error"));
       } finally {
         setLoading(false);
       }
@@ -31,19 +51,15 @@ const LaunchesPage = () => {
   }, []);
 
   useEffect(() => {
-    // Фильтруем запуски при изменении фильтра
     if (currentFilter === "all") {
       setFilteredLaunches(launches);
     } else if (currentFilter === "success") {
       setFilteredLaunches(launches.filter(launch => 
-        launch.status.abbrev?.toLowerCase().includes("success") || 
-        launch.status.abbrev?.toLowerCase().includes("go")
+        launch.status === "Success"
       ));
     } else if (currentFilter === "failure") {
       setFilteredLaunches(launches.filter(launch => 
-        launch.status.abbrev?.toLowerCase().includes("fail") || 
-        launch.status.abbrev?.toLowerCase().includes("hold") ||
-        launch.status.abbrev?.toLowerCase().includes("tbd")
+        launch.status === "Failure"
       ));
     }
   }, [currentFilter, launches]);
@@ -58,9 +74,11 @@ const LaunchesPage = () => {
   return (
     <div className="w-full relative flex ct-docs-disable-sidebar-content overflow-x-hidden">
       <Sidebar />
-      <div className="container mx-auto px-64 py-8 ml-80">
-        <h1 className="text-3xl font-bold mb-6 text-center">Space Launches</h1>
-        <LaunchFinder onFilterChange={handleFilterChange} />
+      <div className="container mx-auto px-56 py-16">
+        <div className="container ml-32">
+          <h1 className="text-3xl font-bold mb-6 text-center ml-4">Space Launches</h1>
+          <LaunchFinder onFilterChange={handleFilterChange} />
+        </div>
         <CardList launches={filteredLaunches} />
       </div>
     </div>

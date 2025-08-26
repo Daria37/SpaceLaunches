@@ -9,11 +9,11 @@ namespace api.Mappers
 {
     public static class AgencyMappers
     {
-        public static AgencyDto ToAgencyDto(this Agency agencyModel)
+        public static SpaceDevsAgency ToAgencyDto(this Agency agencyModel)
         {
-            return new AgencyDto
+            return new SpaceDevsAgency
             {
-                ID = agencyModel.ID,
+                id = agencyModel.ID,
                 Name = agencyModel.Name,
                 Type = agencyModel.Type,
                 CountryCode = agencyModel.CountryCode

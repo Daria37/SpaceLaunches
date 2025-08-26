@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using api.Dtos.Account;
 using api.Dtos.Roles;
-using api.Interfaces;
 using api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +13,7 @@ namespace api.Controllers
 {
     [ApiController]
     [Route("api/admin")]
-    [Authorize(Roles = "Admin")] // Доступ только для админов
+    [Authorize(Roles = "Admin")]
     public class AdminController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;

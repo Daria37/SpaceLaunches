@@ -13,6 +13,8 @@ namespace api.Interfaces
         Task<SpaceDevsResponce> GetData2020Async();
         Task<List<Rocket>> GetRocketAsync();
         Task<List<Launches>> GetLaunchesAsync();
+        Task<List<Launches>> GetLaunchesSpaceX();
+        Task<Launches> GetLaunchByIdAsync(string id);
         Task<List<Launches>> GetLaunchesAfter2020Async();
         Task<List<Agency>> GetAgencyAfter2020Async();
         Task<List<Rocket>> GetRocketAfter2020Async();

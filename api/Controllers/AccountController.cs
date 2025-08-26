@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using api.Dtos.Account;
 using api.Interfaces;
 using api.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,15 +17,13 @@ namespace api.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
-        public AccountController(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signInManager = signInManager;
-            _roleManager = roleManager;
         }
 
         [HttpPost("login")]
@@ -43,13 +40,15 @@ namespace api.Controllers
 
             if (!result.Succeeded) return Unauthorized("Username not found and/or password incorrect");
 
+            var userRoles = await _userManager.GetRolesAsync(user);
 
             return Ok(
                 new NewUserDto
                 {
                     UserName = user.UserName,
                     Email = user.Email,
-                    Token = _tokenService.CreateToken(user)
+                    Token = _tokenService.CreateToken(user),
+                    Roles = userRoles.ToList()
                 }
             );
         }
@@ -70,8 +69,7 @@ namespace api.Controllers
 
             if (createdUser.Succeeded)
             {
-                // Назначаем роль "User" по умолчанию
-                await _userManager.AddToRoleAsync(appUser, "User"); // <- Уже есть у вас
+                await _userManager.AddToRoleAsync(appUser, "User");
 
                 return Ok(new NewUserDto
                 {
@@ -84,36 +82,15 @@ namespace api.Controllers
             return BadRequest(createdUser.Errors);
         }
 
-        // Временный эндпоинт для назначения роли (потом удалите)
-        [HttpPost("make-me-admin")]
-        public async Task<IActionResult> MakeMeAdmin()
-        {
-            var user = await _userManager.FindByEmailAsync("admin@example.com");
-            if (user == null) return BadRequest("User not found");
-
-            // Создаем роль, если её нет
-            if (!await _roleManager.RoleExistsAsync("Admin"))
-                await _roleManager.CreateAsync(new IdentityRole("Admin"));
-
-            // Назначаем роль
-            var result = await _userManager.AddToRoleAsync(user, "Admin");
-            return result.Succeeded
-                ? Ok("Now you are admin!")
-                : BadRequest(result.Errors);
-        }
-
         [HttpPost("fix-roles")]
-        // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> FixRoles()
         {
             var user = await _userManager.FindByNameAsync("admin");
             if (user == null) return BadRequest("User not found");
 
-            // Удаляем все роли
             var currentRoles = await _userManager.GetRolesAsync(user);
             await _userManager.RemoveFromRolesAsync(user, currentRoles);
             
-            // Добавляем только Admin
             await _userManager.AddToRoleAsync(user, "Admin");
             
             return Ok("Roles fixed. User now has only Admin role");

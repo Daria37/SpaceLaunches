@@ -1,60 +1,71 @@
 import React, { useEffect, useState } from "react";
-import { data, Link, useParams } from "react-router-dom";
-import { CompanyProfile } from "../../spacelaunches";
-import { fetchLaunches } from "../../api";
+import { useParams, Link } from "react-router-dom";
+import { getLaunchByIdFromBackend } from "../../api";
 import { ISpaceLaunch } from "../../spacelaunches";
 import LaunchImage from "../../Components/Images/LaunchImage";
 import Spinner from "../../Components/Spinner/Spinner";
 
 const CompanyPage = () => {
-  let { ticker } = useParams();
+  let { id } = useParams();
   const [launch, setLaunch] = useState<ISpaceLaunch | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-  const getLaunchData = async () => {
-    try {
-      <Spinner />
-      // setLoading(true);
-      const result = await fetchLaunches();
-    //   console.log("Ticker from URL:", ticker);
-      
-      if (typeof result !== "string") {
-        const foundLaunch = result.find(l => {
-        //   console.log("Launch ID:", l.id, "Ticker:", ticker);
-          return l.name === ticker;
-        });
-        setLaunch(foundLaunch || null);
+    const getLaunchData = async () => {
+      if (!id) {
+        setError("No launch ID provided");
+        setLoading(false);
+        return;
       }
-    } catch (err) {
-      console.error("Error loading launch:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  getLaunchData();
-}, [ticker]);
 
-  // if (loading) return <div>Loading...</div>;
-  if (loading) return <Spinner />
-  if (!launch) return <div>Launch not found</div>;
+      try {
+        setLoading(true);
+        const launchData = await getLaunchByIdFromBackend(id);
+        setLaunch(launchData);
+      } catch (err) {
+        setError("Failed to load launch details");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    getLaunchData();
+  }, [id]);
+
+  if (loading) return <Spinner />;
+  if (error) return <div className="text-red-500">{error}</div>;
+  if (!launch) return <div>Launch not found for ID: {id}</div>;
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">{launch.name}</h1>
+    <div className="container mx-auto p-4">
+      <Link to="/launches" className="text-blue-500 hover:underline mb-4 inline-block">
+        ← Back to Launches
+      </Link>
+
       <div className="bg-white p-6 rounded-lg shadow">
+        <h1 className="text-2xl font-bold mb-4">{launch.name}</h1>
+        
         <LaunchImage 
-          imageUrl={launch.pad.location.map_image} 
-          alt={`Launch location: ${launch.pad.location.country_code}`}
-          className="w-full h-full"
+          imageUrl={launch.mapImage} 
+          alt={`Launch ${launch.name}`}
+          className="w-full h-64 object-cover rounded mb-4"
         />
-        <p><strong>Date:</strong> {new Date(launch.window_start).toLocaleDateString()}</p>
-        <p><strong>Rocket:</strong> {launch.rocket.configuration.name}</p>
-        <p><strong>Status:</strong> {launch.status.abbrev}</p>
-        <p><strong>Type:</strong> {launch.launch_service_provider.type}</p>
-        <p><strong>Location:</strong> {launch.pad.location.country_code}</p>
-        <p><strong>Mission:</strong> {launch.mission.description}</p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <h3 className="font-semibold text-lg mb-2">Launch Details</h3>
+            <p><strong>Date:</strong> {new Date(launch.createdOnUTC).toLocaleDateString()}</p>
+            <p><strong>Rocket:</strong> {launch.rocketName}</p>
+            <p><strong>Status:</strong> {launch.status}</p>
+          </div>
+          
+          <div>
+            <h3 className="font-semibold text-lg mb-2">Location</h3>
+            <p><strong>Country:</strong> {launch.countryCode}</p>
+            <p><strong>Mission:</strong> {launch.mission}</p>
+          </div>
+        </div>
       </div>
     </div>
   );

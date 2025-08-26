@@ -267,7 +267,7 @@ namespace SpaceLaunch.Migrations
                     b.Property<string>("CountryCode")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedOnUTC")
+                    b.Property<DateTime?>("CreatedOnUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Image")
@@ -288,6 +288,9 @@ namespace SpaceLaunch.Migrations
 
                     b.Property<int?>("RocketID")
                         .HasColumnType("integer");
+
+                    b.Property<string>("RocketName")
+                        .HasColumnType("text");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -380,15 +383,13 @@ namespace SpaceLaunch.Migrations
 
             modelBuilder.Entity("api.Models.Launches", b =>
                 {
-                    b.HasOne("api.Models.Agency", "Agency")
+                    b.HasOne("api.Models.Agency", null)
                         .WithMany("Launches")
                         .HasForeignKey("AgencyID");
 
                     b.HasOne("api.Models.Rocket", "Rocket")
                         .WithMany("Lauches")
                         .HasForeignKey("RocketID");
-
-                    b.Navigation("Agency");
 
                     b.Navigation("Rocket");
                 });

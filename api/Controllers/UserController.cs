@@ -7,7 +7,7 @@ namespace api.Controllers
 {
     [Route("api/users")]
     [ApiController]
-    [Authorize(Roles = "Admin")] // Только для админов!
+    [Authorize(Roles = "Admin")]
     public class UserController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
@@ -17,32 +17,44 @@ namespace api.Controllers
             _userManager = userManager;
         }
 
-        // Получить всех пользователей
         [HttpGet]
-        public IActionResult GetAllUsers()
+        public async Task<IActionResult> GetAllUsers()
         {
             var users = _userManager.Users.ToList();
-            return Ok(users);
+            var result = new List<object>();
+            
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                result.Add(new 
+                {
+                    user.Id,
+                    user.UserName,
+                    user.Email,
+                    user.EmailConfirmed,
+                    Roles = roles
+                });
+            }
+            
+            return Ok(result);
         }
 
-        // Назначить роль пользователю
-        [HttpPost("{userId}/roles")]
-        public async Task<IActionResult> AssignRole(string userId, [FromBody] string role)
+        [HttpPost("{userName}/roles")]
+        public async Task<IActionResult> AssignRole(string userName, [FromBody] string role)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return NotFound("User not found");
-
-            var result = await _userManager.AddToRoleAsync(user, role);
-            if (!result.Succeeded) return BadRequest(result.Errors);
+            var user = await _userManager.FindByNameAsync(userName);
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, currentRoles);
+            
+            await _userManager.AddToRoleAsync(user, "Admin");
 
             return Ok($"Role '{role}' assigned to user {user.UserName}");
         }
 
-        // Удалить пользователя
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteUser(string userId)
+        [HttpDelete("{userName}")]
+        public async Task<IActionResult> DeleteUser(string userName)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByNameAsync(userName);
             if (user == null) return NotFound();
 
             var result = await _userManager.DeleteAsync(user);

@@ -2,7 +2,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using api.Data;
 using api.Interfaces;
-using api.Mappers;
 using api.Models;
 using api.Repository;
 using api.Service;
@@ -11,7 +10,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,7 +91,6 @@ builder.Services.AddScoped<ILaunchesRepository, LaunchesRepository>();
 builder.Services.AddScoped<IAgencyRepository, AgencyRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ISpaceDevsService, SpaceDevsService>();
-// builder.Services.AddSingleton<RedisCacheService>();
 
 builder.Services.Configure<JsonSerializerOptions>(options =>
 {
@@ -106,20 +103,8 @@ builder.Services.AddHttpClient("Client", o =>
     o.BaseAddress = new Uri("https://ll.thespacedevs.com/2.2.0/");
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins("http://localhost:3000") // URL вашего фронта
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials();
-    });
-});
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

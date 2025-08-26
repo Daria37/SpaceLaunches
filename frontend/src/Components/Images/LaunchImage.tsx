@@ -11,7 +11,6 @@ const LaunchImage: React.FC<LaunchImageProps> = ({
   alt, 
   className = "" 
 }) => {
-  // Проверяем валидность URL
   const isValidUrl = imageUrl && imageUrl.startsWith('http');
   
   if (!isValidUrl) {
@@ -28,9 +27,7 @@ const LaunchImage: React.FC<LaunchImageProps> = ({
       alt={alt}
       className={`object-cover w-60 h-60 ${className}`}
       onError={(e) => {
-        // Запасной вариант если изображение не загрузится
         e.currentTarget.style.display = 'none';
-        // e.currentTarget.nextSibling?.style.display = 'block';
       }}
     />
   );
